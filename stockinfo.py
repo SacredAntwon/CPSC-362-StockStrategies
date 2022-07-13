@@ -1,7 +1,51 @@
 import yfinance as yf
+import json
 
-msft = yf.Ticker("^DJI")
+# Getting stock tickers from json included in folder
+f = open('DOW.json')
+data = json.load(f)
 
-# get stock info
+# Ask the user the number of stocks they would like to look at
+stockNumber = int(input("Enter the number of stocks in Dow Jones you would \
+like to check (Insert a number between 1 and 30 inclusive): "))
 
-print(msft.info['open'])
+# If a number under or over the suggested amount will enter a loop until
+# the valid amount is insterted.
+while (stockNumber < 1 or stockNumber > 30):
+    stockNumber = int(input("Invalid Amount! Enter the number of stocks in \
+Dow Jones you would like to check (Insert a number between 1 and 30 \
+inclusive): "))
+
+# Create the list based off the amount the user inserted.
+selectedStock = data['DOW'][0:(stockNumber)]
+
+print("\nGetting stock information. This may take a couple minutes depending \
+on the number of stocks selected.")
+
+# This function will check if there is a valid key.
+def findInfo(currentStock, key):
+    if key in currentStock:
+        return currentStock[key]
+    else:
+        return None
+
+# We have a dictionary for assigning the information to the ticker called dowJones
+# There is also a list called keys for the keys we are looking for.
+dowJones = {}
+keys = ['open', 'previousClose', 'bid', 'ask', 'volume', 'trailingPE', 'reveSharenuePer']
+
+# This loop will get all the stock tickers and assign all the information to the
+# tickers in the dictionary.
+for stock in selectedStock:
+    stockInfo = []
+    print(stock)
+    currentStock = (yf.Ticker(stock)).info
+    for key in keys:
+        stockInfo.append(findInfo(currentStock, key))
+
+    print(stockInfo)
+    dowJones[stock] = stockInfo
+
+
+# print(dowJones['test1'][0])
+# print(msft.info)
