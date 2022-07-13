@@ -32,7 +32,7 @@ def findInfo(currentStock, key):
 # We have a dictionary for assigning the information to the ticker called dowJones
 # There is also a list called keys for the keys we are looking for.
 dowJones = {}
-keys = ['open', 'previousClose', 'bid', 'ask', 'volume', 'trailingPE', 'reveSharenuePer']
+keys = ['open', 'previousClose', 'bid', 'ask', 'volume', 'trailingPE', 'forwardEps']
 
 # This loop will get all the stock tickers and assign all the information to the
 # tickers in the dictionary.
