@@ -45,7 +45,3 @@ for stock in selectedStock:
 
     print(stockInfo)
     dowJones[stock] = stockInfo
-
-
-# print(dowJones['test1'][0])
-# print(msft.info)
