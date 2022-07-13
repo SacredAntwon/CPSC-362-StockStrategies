@@ -17,7 +17,7 @@ Dow Jones you would like to check (Insert a number between 1 and 30 \
 inclusive): "))
 
 # Create the list based off the amount the user inserted.
-selectedStock = data['DOW'][0:(stockNumber)]
+listOfStocks = data['DOW'][0:(stockNumber)]
 
 print("\nGetting stock information. This may take a couple minutes depending \
 on the number of stocks selected.")
@@ -36,12 +36,23 @@ keys = ['open', 'previousClose', 'bid', 'ask', 'volume', 'trailingPE', 'reveShar
 
 # This loop will get all the stock tickers and assign all the information to the
 # tickers in the dictionary.
-for stock in selectedStock:
+for stock in listOfStocks:
     stockInfo = []
     print(stock)
     currentStock = (yf.Ticker(stock)).info
     for key in keys:
         stockInfo.append(findInfo(currentStock, key))
 
-    print(stockInfo)
     dowJones[stock] = stockInfo
+
+selectedStock = input("Enter the stock ticker from the list you would like \
+to look at or type 'exit' to end the program: ")
+
+while (selectedStock != "exit"):
+    if selectedStock in listOfStocks:
+        print("{}: {}".format(selectedStock, dowJones[selectedStock]))
+    else:
+        print("Invalid ticker!")
+
+    selectedStock = input("Enter the stock ticker from the list you would like \
+to look at or type 'exit' to end the program: ")
