@@ -2,7 +2,7 @@ import yfinance as yf
 import json
 import os.path
 
-STOCK_NUMBER = 4
+STOCK_NUMBER = 30
 
 class StockInfo:
 
@@ -21,7 +21,7 @@ class StockInfo:
 
     # -------------------------------------------------------------------
 
-    def fileExists(file: str) -> bool:
+    def fileExists(self, file: str) -> bool:
 
         # Check if the file exists
         if os.path.isfile(file):
@@ -41,12 +41,26 @@ class StockInfo:
 
         return data
 
+    # This function will convert the information to a string.
+    def displayInfo(self, currentStock):
+        currentStockInfo = self.getStockInfo(currentStock)
+        return ("\nTicker: {} \nOpen: {}\nClose: {}\nBid: {} \nAsk: {}\nVolume: \
+{}\nPE Ratio: {}\nEPS: {}\nRecommendation: Firm - {}  Grade - {}\n".format(currentStock,
+currentStockInfo['open'], currentStockInfo['previousClose'], currentStockInfo['bid'],
+currentStockInfo['ask'], currentStockInfo['volume'], currentStockInfo['trailingPE'],
+currentStockInfo['trailingEps'], currentStockInfo['recommend']['firm'],
+currentStockInfo['recommend']['grade']))
+
     # This function will check if there is a valid key.
     def findInfo(self, currentStock, key):
         if key in currentStock:
             return currentStock[key]
         else:
             return None
+
+    def getStockInfo(self, currentStock):
+
+        return self.dowJones[currentStock]
 
     def getAllStockInfo(self) -> list:
 
@@ -60,6 +74,7 @@ class StockInfo:
 
         # Check if the file exists
         if not self.fileExists("userStocks.json"):
+            print("Getting stock information from yahoo!")
 
             data = self.getJSONData('DOW.json')
 
@@ -68,7 +83,7 @@ class StockInfo:
         else:
 
             with open('userStocks.json', 'r') as openfile:
- 
+
                 # Reading from json file
                 self.dowJones = json.load(openfile)
 
@@ -91,8 +106,12 @@ class StockInfo:
             stockInfo = {}
             print(stock)
             currentStock = (yf.Ticker(stock)).info
+            recommendStock = (yf.Ticker(stock)).recommendations
+            recoList = {"firm": recommendStock["Firm"][-1], "grade": recommendStock["To Grade"][-1]}
             for key in keys:
                 stockInfo[key] = self.findInfo(currentStock, key)
+
+            stockInfo["recommend"] = recoList
 
             self.dowJones[stock] = stockInfo
 
@@ -102,4 +121,3 @@ class StockInfo:
         return self.fileExists("userStocks.json")
 
     # -------------------------------------------------------------------
-
