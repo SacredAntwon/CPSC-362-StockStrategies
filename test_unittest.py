@@ -19,7 +19,7 @@ class TestStock(unittest.TestCase):
 
         numStocks = 1
 
-        self.assertNotEqual(stockinfo.getStockNames(numStocks, jsonData), [])
+        self.assertNotEqual(stockinfo.getStockNames(numStocks, jsonData), dict())
 
     def testDidGetNStocks(self):
 
@@ -35,15 +35,15 @@ class TestStock(unittest.TestCase):
 
         numStocks = 0
 
-        self.assertEqual(stockinfo.getStockNames(numStocks, jsonData), [])
+        self.assertEqual(stockinfo.getStockNames(numStocks, jsonData), dict())
 
         numStocks = -1
 
-        self.assertEqual(stockinfo.getStockNames(numStocks, jsonData), [])
+        self.assertEqual(stockinfo.getStockNames(numStocks, jsonData), dict())
 
         numStocks = 31
 
-        self.assertEqual(stockinfo.getStockNames(numStocks, jsonData), [])
+        self.assertEqual(stockinfo.getStockNames(numStocks, jsonData), dict())
 
 if __name__ == '__main__':
     unittest.main()
