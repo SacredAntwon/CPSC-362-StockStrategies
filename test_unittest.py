@@ -27,7 +27,7 @@ class TestStock(unittest.TestCase):
 
         numStocks = 8
 
-        self.assertEqual(len(stockinfo.getStockNames(numStocks, jsonData)[0]), numStocks)
+        self.assertEqual(len(stockinfo.getStockNames(numStocks, jsonData).keys()), numStocks)
 
     def testInvalidStockNumber(self):
 
