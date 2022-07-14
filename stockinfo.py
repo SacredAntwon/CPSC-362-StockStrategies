@@ -2,7 +2,7 @@ import yfinance as yf
 import json
 import os.path
 
-STOCK_NUMBER = 30
+STOCK_NUMBER = 4
 
 class StockInfo:
 
@@ -20,6 +20,17 @@ class StockInfo:
     # Methods
 
     # -------------------------------------------------------------------
+
+    def fileExists(file: str) -> bool:
+
+        # Check if the file exists
+        if os.path.isfile(file):
+
+            return True
+
+        else:
+
+            return False
 
     def getJSONData(self, file: str) -> dict:
 
@@ -41,10 +52,14 @@ class StockInfo:
 
         return self.dowJones
 
+    def getStockNames(self) -> list:
+
+        return self.dowJones.keys()
+
     def readJSONFile(self):
 
         # Check if the file exists
-        if not os.path.isfile("userStocks.json"):
+        if not self.fileExists("userStocks.json"):
 
             data = self.getJSONData('DOW.json')
 
@@ -56,13 +71,6 @@ class StockInfo:
  
                 # Reading from json file
                 self.dowJones = json.load(openfile)
-
-                
-
-
-    def getStockNames(self) -> list:
-
-        return self.dowJones.keys()
 
     def storeStockInfo(self, data: dict) -> bool:
 
@@ -91,14 +99,7 @@ class StockInfo:
         with open("userStocks.json", "w") as outfile:
             json.dump(self.dowJones, outfile)
 
-        # Check if the file exists
-        if os.path.isfile("userStocks.json"):
-
-            return True
-
-        else:
-
-            return False
+        return self.fileExists("userStocks.json")
 
     # -------------------------------------------------------------------
 

@@ -8,4 +8,6 @@ import stockinfo
 
 obj = stockinfo.StockInfo()
 
-print(obj.readJSONFile())
+obj.readJSONFile()
+
+print(obj.getAllStockInfo())
