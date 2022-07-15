@@ -1,49 +1,64 @@
 import unittest
 import stockinfo
 
-class TestStock(unittest.TestCase):
+obj = stockinfo.StockInfo()
 
+# Created a fake stock
+obj.dowJones = {"FKE":
+{"open": 140,
+"previousClose": 145,
+"bid": 20,
+"ask": 15,
+"volume": 69110000,
+"trailingPE": 25,
+"trailingEps": 5.61,
+"recommend": {"firm": "Rosenblatt", "grade": "Neutral"}},
+"HEY":
+{"open": 142,
+"previousClose": 130,
+"bid": 10,
+"ask": 8,
+"volume": 63773878,
+"trailingPE": 14,
+"trailingEps": 12,
+"recommend": {"firm": "Yahoo", "grade": "Buy"}}
+}
+
+class TestStock(unittest.TestCase):
+    # This function tests if 1) the specified JSON file exists and 2) if JSON data could be loaded from that file
     def testGetJSONData(self):
 
-        # This function tests if 1) the specified JSON file exists and 2) if JSON data could be loaded from that file
-
-        jsonData = stockinfo.getJSONData('DOW.json')
+        jsonData = obj.getJSONData('DOW.json')
 
         self.assertNotEqual(jsonData, None)
 
+    # This will test if the json we made exists
+    def testJSONExists(self):
+
+        self.assertEqual(obj.fileExists('userStocks.json'), True)
+
+    # This function tests if we get the keys from our dictionary
     def testDidGetStock(self):
 
-        # This function tests to make sure that getStockNames can retrieve at least one stock
+        self.assertEqual(list(obj.getStockNames()), ['FKE', 'HEY'])
 
-        jsonData = stockinfo.getJSONData('DOW.json')
+    # This function will check to see if clos, which is not in the dictionary
+    # will return none.
+    def testInvalidKey(self):
 
-        numStocks = 1
+        self.assertEqual(obj.findInfo(obj.dowJones['FKE'], 'clos'), None)
 
-        self.assertNotEqual(stockinfo.getStockNames(numStocks, jsonData), dict())
+    # This function will check to see if open is assigned to FKE correctly
+    def testValidKey(self):
 
-    def testDidGetNStocks(self):
+        self.assertEqual(obj.findInfo(obj.dowJones['FKE'], 'open'), 140)
 
-        jsonData = stockinfo.getJSONData('DOW.json')
+    # This function will check to see if ask is assigned to HEY correctly
+    def testValidKey(self):
 
-        numStocks = 8
+        self.assertEqual(obj.findInfo(obj.dowJones['HEY'], 'ask'), 8)
 
-        self.assertEqual(len(stockinfo.getStockNames(numStocks, jsonData).keys()), numStocks)
 
-    def testInvalidStockNumber(self):
-
-        jsonData = stockinfo.getJSONData('DOW.json')
-
-        numStocks = 0
-
-        self.assertEqual(stockinfo.getStockNames(numStocks, jsonData), dict())
-
-        numStocks = -1
-
-        self.assertEqual(stockinfo.getStockNames(numStocks, jsonData), dict())
-
-        numStocks = 31
-
-        self.assertEqual(stockinfo.getStockNames(numStocks, jsonData), dict())
 
 if __name__ == '__main__':
     unittest.main()

@@ -21,6 +21,7 @@ class StockInfo:
 
     # -------------------------------------------------------------------
 
+    # Checks if a file exists
     def fileExists(self, file: str) -> bool:
 
         # Check if the file exists
@@ -32,10 +33,9 @@ class StockInfo:
 
             return False
 
+    # Gets information from json
     def getJSONData(self, file: str) -> dict:
-
         # Getting stock tickers from json included in folder
-        # f = open('DOW.json')
         f = open(file)
         data = json.load(f)
 
@@ -58,18 +58,23 @@ currentStockInfo['recommend']['grade']))
         else:
             return None
 
+    # Return the info from a dictionary about a stock
     def getStockInfo(self, currentStock):
 
         return self.dowJones[currentStock]
 
+    # Gets all the stock tickers and their information
     def getAllStockInfo(self) -> list:
 
         return self.dowJones
 
+    # Gets all the stock tickers from the dictionary
     def getStockNames(self) -> list:
 
         return self.dowJones.keys()
 
+    # Either call the function to grab the stock information from yfinance or
+    # if our json exists, read the userStocks.json and grab the information.
     def readJSONFile(self):
 
         # Check if the file exists
@@ -87,21 +92,15 @@ currentStockInfo['recommend']['grade']))
                 # Reading from json file
                 self.dowJones = json.load(openfile)
 
+    # Grab and store stock infromation
     def storeStockInfo(self, data: dict) -> bool:
-
-        # Return an empty list if the number of stocks is <= 0
-        #if stockNumber <= 0 or stockNumber > 30:
-
-        #    return dict()
-
-        # Create the list based off the amount the user inserted.
-        listOfStocks = data['DOW'][0:(STOCK_NUMBER)]
 
         # We have a dictionary for assigning the information to the ticker called dowJones
         # There is also a list called keys for the keys we are looking for.
-        # dowJones = {}
+
         keys = ['open', 'previousClose', 'bid', 'ask', 'volume', 'trailingPE', 'trailingEps']
 
+        # Loop through all the tickers and grab the information from yfinance
         for stock in listOfStocks:
             stockInfo = {}
             print(stock)
