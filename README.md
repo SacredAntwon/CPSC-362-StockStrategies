@@ -14,4 +14,6 @@ Name: Eric Cheyne       Email: echeyne@csu.fullerton.edu
 
 ## Instructions:
 
-Included in this repository is a file called 'requirements.txt' and this contains all the rquired libraries to run the program. In order to install all these libraries using pip, run the command 'pip install -r requirements.txt'. All the necessary libraries will be downloaded after this command is executed.
+Run 'main.py' to start the program.
+
+Included in this repository is a file called 'requirements.txt' and this contains all the required libraries to run the program. In order to install all these libraries using pip, run the command 'pip install -r requirements.txt'. All the necessary libraries will be downloaded after this command is executed.
