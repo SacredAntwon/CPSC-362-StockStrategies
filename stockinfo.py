@@ -95,6 +95,8 @@ currentStockInfo['recommend']['grade']))
     # Grab and store stock infromation
     def storeStockInfo(self, data: dict) -> bool:
 
+        listOfStocks = data['DOW']
+
         # We have a dictionary for assigning the information to the ticker called dowJones
         # There is also a list called keys for the keys we are looking for.
 
