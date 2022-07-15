@@ -49,12 +49,12 @@ class TestStock(unittest.TestCase):
         self.assertEqual(obj.findInfo(obj.dowJones['FKE'], 'clos'), None)
 
     # This function will check to see if open is assigned to FKE correctly
-    def testValidKey(self):
+    def testValid1Key(self):
 
         self.assertEqual(obj.findInfo(obj.dowJones['FKE'], 'open'), 140)
 
     # This function will check to see if ask is assigned to HEY correctly
-    def testValidKey(self):
+    def testValid2Key(self):
 
         self.assertEqual(obj.findInfo(obj.dowJones['HEY'], 'ask'), 8)
 
