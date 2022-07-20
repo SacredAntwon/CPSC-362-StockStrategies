@@ -1,5 +1,6 @@
 import stockinfo
-
+import requests
+import json
 # Call the functions
 
 obj = stockinfo.StockInfo()
