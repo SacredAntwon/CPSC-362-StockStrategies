@@ -2,8 +2,7 @@ import json
 import os.path
 import requests
 
-# STOCK_NUMBER = 1
-
+# FINISHED API DEMO AND PASSED AT July 19th 8:01 PM
 class StockInfo:
 
     # Initializer
