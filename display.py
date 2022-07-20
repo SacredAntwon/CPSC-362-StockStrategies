@@ -9,13 +9,18 @@ class DisplayClass(tk.Tk):
         super().__init__()
 
         #self.geometry("240x100")
-        self.geometry("1280x720")
+        self.geometry("900x600")
         self.title('Login')
         # self.resizable(0, 0)
 
-        # configure the grid
-        # self.columnconfigure(0, weight=1)
-        # self.columnconfigure(1, weight=3)
+        # configure the columns in the grid
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=3)
+        self.columnconfigure(2, weight=1)
+
+        self.rowconfigure(0, weight=5)
+        self.rowconfigure(1, weight=5)
+        self.rowconfigure(2, weight=4)
 
         self.create_stockinfo()
 
@@ -23,16 +28,17 @@ class DisplayClass(tk.Tk):
     def create_stockinfo(self):
 
         # Create the underlying frame that holds all stock information
-        stockInfo = ttk.Frame(self)
-        stockInfo.grid(column=0, row=0)
+        stockInfo = tk.Frame(self)
+        stockInfo.grid(column=1, row=1)
 
         categories = ["Stock", "Open", "Close", "Bid", "Ask", "Vol", "PE", "EPS", "Firm", "Brade", "BT%"]
-
         for index in range(len(categories)):
 
-            # Create the "stock" name inside the stockInfo frame
-            stockName = ttk.Label(stockInfo, text=categories[index])
+            # Create each category inside the stockInfo frame
+            stockName = ttk.Label(stockInfo, text=categories[index], font='Verdana 13 underline')
             stockName.grid(column=index, row=0)
+
+            # Add here the displays for each stock retrieved from the API call
 
         #myButton.pack()
         #stockInfo.pack()
