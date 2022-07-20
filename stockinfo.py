@@ -44,12 +44,6 @@ class StockInfo:
     # This function will convert the information to a string.
     def displayInfo(self, currentStock):
         currentStockInfo = self.getStockInfo(currentStock)
-#         return ("\nTicker: {} \nOpen: {}\nClose: {}\nBid: {} \nAsk: {}\nVolume: \
-# {}\nPE Ratio: {}\nEPS: {}\nRecommendation: Firm - {}  Grade - {}\n".format(currentStock,
-# currentStockInfo['open'], currentStockInfo['previousClose'], currentStockInfo['bid'],
-# currentStockInfo['ask'], currentStockInfo['volume'], currentStockInfo['trailingPE'],
-# currentStockInfo['trailingEps'], currentStockInfo['recommend']['firm'],
-# currentStockInfo['recommend']['grade']))
         return ("\nTicker: {} \nOpen: {}\nClose: {}\nBid: {} \nAsk: {}\nVolume: \
 {}\nPE Ratio: {}\nEPS: {}\nRecommendation: {}\n".format(currentStock,
 currentStockInfo['regularMarketOpen'], currentStockInfo['regularMarketPreviousClose'], currentStockInfo['bid'],
