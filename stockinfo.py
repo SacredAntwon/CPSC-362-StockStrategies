@@ -106,6 +106,7 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
             stockLink = url+stock
 
             response = requests.get(stockLink, headers={'User-agent': 'Mozilla/5.0'})
+            print(response.status_code)
             if (response.status_code != 200):
                 if self.fileExists("userStocks.json"):
                     self.dowJones = self.getJSONData("userStocks.json")
