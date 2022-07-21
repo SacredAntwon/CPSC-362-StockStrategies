@@ -11,7 +11,7 @@ class DisplayClass(tk.Tk):
         #self.geometry("240x100")
         self.geometry("900x1200")
         self.title('Login')
-        self.resizable(0, 0)
+        #self.resizable(0, 0)
 
         # configure the columns in the grid
         self.columnconfigure(0, weight=1)
@@ -37,8 +37,8 @@ class DisplayClass(tk.Tk):
         obj.readJSONFile()
 
         stockDict = obj.dowJones
-        stockNames = ['AAPL', 'AMGN', 'AXP', 'BA', 'CAT', 'CRM', 'CSCO', 'CVX', 'DIS', 'DOW', 'GS', 'HD', 'HON', 'IBM', 'INTC', 'JNJ', 'JPM', 'KO', 'MCD', 'MMM', 'MRK', 'MSFT', 'NKE', 'PG', 'TRV', 'UNH', 'V', 'VZ', 'WBA', 'WMT']
-        stockData = ["regularMarketOpen", "regularMarketPreviousClose", "bid", "ask", "regularMarketVolume", "trailingPE", "epsTrailingTwelveMonths", "averageAnalystRating"]
+        stockData = obj.keys
+        stockNames = obj.getStockNames()
 
         # Create the underlying frame that holds all stock information
         stockInfo = tk.Frame(self)
@@ -84,7 +84,7 @@ class DisplayClass(tk.Tk):
         login_button = ttk.Button(self, text="Login")
         login_button.grid(column=1, row=3, sticky=tk.E, padx=5, pady=5)"""
 
-    
+
     def create_buttons(self):
 
         #stockButtons = tk.Frame(self)

@@ -12,7 +12,7 @@ class StockInfo:
     def __init__(self):
 
         self.dowJones = {}
-
+        self.keys = ['regularMarketOpen', 'regularMarketPreviousClose', 'bid', 'ask', 'regularMarketVolume', 'trailingPE', 'epsTrailingTwelveMonths', 'averageAnalystRating']
     # -------------------------------------------------------------------
 
 
@@ -69,7 +69,7 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
     # Gets all the stock tickers from the dictionary
     def getStockNames(self) -> list:
 
-        return self.dowJones.keys()
+        return list(self.dowJones.keys())
 
     # Either call the function to grab the stock information from yfinance or
     # if our json exists, read the userStocks.json and grab the information.
@@ -100,7 +100,6 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
         listOfStocks = data['DOW']
         url = "https://query1.finance.yahoo.com/v7/finance/quote?symbols="
 
-        keys = ['regularMarketOpen', 'regularMarketPreviousClose', 'bid', 'ask', 'regularMarketVolume', 'trailingPE', 'epsTrailingTwelveMonths', 'averageAnalystRating']
         # Loop through all the tickers and grab the information from yfinance
         for stock in listOfStocks:
             stockInfo = {}
@@ -108,7 +107,7 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
 
             response = requests.get(stockLink, headers={'User-agent': 'Mozilla/5.0'})
             if (response.status_code != 200):
-                if self.fileExists("userStocks.json"))
+                if self.fileExists("userStocks.json"):
                     self.dowJones = self.getJSONData("userStocks.json")
                     break
                 else:
@@ -116,7 +115,7 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
             else:
                 currentStock = response.json()["quoteResponse"]["result"][0]
 
-            for key in keys:
+            for key in self.keys:
                 stockInfo[key] = self.findInfo(currentStock, key)
 
             self.dowJones[stock] = stockInfo
