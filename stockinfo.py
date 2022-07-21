@@ -107,7 +107,14 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
             stockLink = url+stock
 
             response = requests.get(stockLink, headers={'User-agent': 'Mozilla/5.0'})
-            currentStock = response.json()["quoteResponse"]["result"][0]
+            if (response.status_code != 200):
+                if self.fileExists("userStocks.json"))
+                    self.dowJones = self.getJSONData("userStocks.json")
+                    break
+                else:
+                    return False
+            else:
+                currentStock = response.json()["quoteResponse"]["result"][0]
 
             for key in keys:
                 stockInfo[key] = self.findInfo(currentStock, key)
@@ -117,6 +124,6 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
         with open("userStocks.json", "w") as outfile:
             json.dump(self.dowJones, outfile)
 
-        return self.fileExists("userStocks.json")
+        return True
 
     # -------------------------------------------------------------------
