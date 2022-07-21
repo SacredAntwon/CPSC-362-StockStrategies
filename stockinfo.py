@@ -1,6 +1,7 @@
 import json
 import os.path
 import requests
+from requests.exceptions import Timeout
 
 # FINISHED API DEMO AND PASSED AT July 19th 8:01 PM
 class StockInfo:
@@ -105,8 +106,12 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
             stockInfo = {}
             stockLink = url+stock
 
-            response = requests.get(stockLink, headers={'User-agent': 'Mozilla/5.0'})
-            print(response.status_code)
+            try:
+                response = requests.get(stockLink, headers={'User-agent': 'Mozilla/5.0'}, timeout=10)
+
+            except Timeout:
+                return False
+
             if (response.status_code != 200):
                 if self.fileExists("userStocks.json"):
                     self.dowJones = self.getJSONData("userStocks.json")
