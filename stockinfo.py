@@ -75,13 +75,13 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
     # if our json exists, read the userStocks.json and grab the information.
     def readJSONFile(self):
 
-        print("Getting stock information from Yahoo Finance. Please wait a few seconds!")
         data = self.getJSONData('DOW.json')
 
         self.storeStockInfo(data)
-        # Check if the file exists
+
+        #Check if the file exists
         # if not self.fileExists("userStocks.json"):
-        #     print("Getting stock information from yahoo!")
+        #     # print("Getting stock information from yahoo!")
         #
         #     data = self.getJSONData('DOW.json')
         #
@@ -100,12 +100,7 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
         listOfStocks = data['DOW']
         url = "https://query1.finance.yahoo.com/v7/finance/quote?symbols="
 
-
-        # We have a dictionary for assigning the information to the ticker called dowJones
-        # There is also a list called keys for the keys we are looking for.
-
         keys = ['regularMarketOpen', 'regularMarketPreviousClose', 'bid', 'ask', 'regularMarketVolume', 'trailingPE', 'epsTrailingTwelveMonths', 'averageAnalystRating']
-
         # Loop through all the tickers and grab the information from yfinance
         for stock in listOfStocks:
             stockInfo = {}

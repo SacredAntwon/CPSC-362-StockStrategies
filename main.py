@@ -1,9 +1,10 @@
 import stockinfo
-import requests
-import json
+
 # Call the functions
 
 obj = stockinfo.StockInfo()
+
+print("Getting stock information from Yahoo Finance. Please wait a few seconds!")
 
 obj.readJSONFile()
 
