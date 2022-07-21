@@ -105,16 +105,13 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
         for stock in listOfStocks:
             stockInfo = {}
             stockLink = url+stock
-            headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0",
-    "Accept-Encoding": "*",
-    "Connection": "keep-alive"
-            }
+            headers={'User-agent': 'Mozilla/5.0'}
 
             try:
                 response = requests.get(stockLink, headers=headers, timeout=10)
-
-            except Timeout:
+                response.close()
+            except Exception as err:
+                print("Got an error! " + str(err))
                 self.dowJones = self.getJSONData("userStocks.json")
                 return True
 
