@@ -10,6 +10,8 @@ obj.readJSONFile()
 
 allSocks = obj.getStockNames()
 
+obj.getStockHistory('AAPL')
+
 # Display all stocks to choose from
 for name in allSocks:
     print(name)
