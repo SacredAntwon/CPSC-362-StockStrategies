@@ -9,7 +9,7 @@ class DisplayClass(tk.Tk):
         super().__init__()
 
         #self.geometry("240x100")
-        self.geometry("900x1200")
+        self.geometry("900x900")
         self.title('Login')
         #self.resizable(0, 0)
 
