@@ -10,7 +10,7 @@ obj.readJSONFile()
 
 allSocks = obj.getStockNames()
 
-obj.getStockHistory('AAPL')
+
 
 # Display all stocks to choose from
 for name in allSocks:
@@ -25,5 +25,6 @@ while (userStock != 'exit'):
         print("\nNot A Valid Ticker!")
     else:
         print(obj.displayInfo(userStock))
+        print(obj.getStockHistory(userStock))
     userStock = input("Type the ticker you would like to view more information \
 about(Case Sensitive) or 'exit' to end the program: ")
