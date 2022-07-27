@@ -1,28 +1,15 @@
-from backtesting import Backtest, Strategy
-from backtesting.lib import crossover
+import stockinfo
 
-from backtesting.test import SMA, GOOG
+obj = stockinfo.StockInfo()
 
+class BackTest:
+    def __init__(self):
+        pass
 
-class SmaCross(Strategy):
-    def init(self):
-        price = self.data.Close
-        self.ma1 = self.I(SMA, price, 10)
-        self.ma2 = self.I(SMA, price, 20)
-
-    def next(self):
-        if crossover(self.ma1, self.ma2):
-            self.buy()
-        elif crossover(self.ma2, self.ma1):
-            self.sell()
-
-
-def getStats(stockHistory):
-    bt = Backtest(stockHistory, SmaCross, commission=.002,
-              exclusive_orders=True)
-
-    stats = bt.run()
-    print(GOOG)
-    return(stats)
-#print(getStats())
-#bt.plot()
+    def movingAverage(self, ticker):
+        stockHistory = obj.getStockHistory(ticker)s
+        stockHistory = stockHistory[["Adj Close"]]
+        stockHistory.rename(columns={"Adj Close":"Price"}, inplace=True)
+        stockHistory = stockHistory.iloc[1:]
+        stockHistory["100MA"] = stockHistory["Price"].rolling(window=100).mean()
+        return stockHistory

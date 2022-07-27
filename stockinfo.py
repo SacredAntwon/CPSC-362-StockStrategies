@@ -26,18 +26,18 @@ class StockInfo:
 
     def getStockHistory(self, ticker):
         #Year, Month, Day, Hour, Minute
-        period1 = int(time.mktime(datetime.datetime(2022, 6, 1, 23, 59).timetuple()))
+        period1 = int(time.mktime(datetime.datetime(2021, 7, 31, 23, 59).timetuple()))
         period2 = int(time.mktime(datetime.datetime(2022, 7, 31, 23, 59).timetuple()))
         interval = '1d' # 1d, 1m, 1wk
 
         query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={period1}&period2={period2}&interval={interval}&events=history&includeAdjustedClose=true'
 
-        df = pd.read_csv(query_string, index_col=False)
-        df.reset_index(drop=True, inplace=True)
-        #df.reset_index(drop=True, inplace=True)
-        del df['Adj Close']
-        #df = df.drop(df.columns[[0, 1, 3]], axis=1)
-
+        df = pd.read_csv(query_string)
+        # Different Index:  Date        Open        High         Low       Close   Adj Close    Volume
+        #print(df['Adj Clos'])
+        #df.set_index('Date', inplace=True)
+        #df = df.rename_axis(None)
+        #df.to_csv('out.csv')
         return df
     # Checks if a file exists
     def fileExists(self, file: str) -> bool:
