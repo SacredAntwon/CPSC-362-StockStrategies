@@ -32,7 +32,11 @@ class StockInfo:
 
         query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={period1}&period2={period2}&interval={interval}&events=history&includeAdjustedClose=true'
 
-        df = pd.read_csv(query_string)
+        df = pd.read_csv(query_string, index_col=False)
+        df.reset_index(drop=True, inplace=True)
+        #df.reset_index(drop=True, inplace=True)
+        del df['Adj Close']
+        #df = df.drop(df.columns[[0, 1, 3]], axis=1)
 
         return df
     # Checks if a file exists

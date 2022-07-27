@@ -1,5 +1,5 @@
 import stockinfo
-
+import backtest
 # Call the functions
 
 obj = stockinfo.StockInfo()
@@ -26,5 +26,8 @@ while (userStock != 'exit'):
     else:
         print(obj.displayInfo(userStock))
         print(obj.getStockHistory(userStock))
+        stock = obj.getStockHistory(userStock)
+        #backtest.getStats(stock)
+        print(backtest.getStats(stock))
     userStock = input("Type the ticker you would like to view more information \
 about(Case Sensitive) or 'exit' to end the program: ")
