@@ -10,6 +10,10 @@ Sharpe  Ratio  (the  reward/risk  ratio, calculated by an annualized return / an
 
 """
 
+# These are the possible values that can be assigned to self.strategy in the Backtesting class
+TREND_FOLLOWING_STRAT = 0
+MEAN_STRAT = 1
+
 class Backtesting:
 
     # We have to store the list of prices for a specific ticker as a property
@@ -17,7 +21,7 @@ class Backtesting:
     #    statistical information simultaneously as described in the specification
 
 
-    def __init__(self, startingBalance, priceList):
+    def __init__(self, startingBalance, priceList, strategy):
 
         # Save the starting balance
         self.startingBalance = startingBalance
@@ -28,28 +32,44 @@ class Backtesting:
         # Saving the price info
         self.priceList = priceList
 
+        # Save the number of elements in priceList as the number of days the stock was held
+        self.numDaysHeld = len(priceList)
+
+        # Save the selected strategy (An int represending the strategy to select)
+        self.strategy = strategy
+
+        self.RunStrategy()
+
         # Initialize all statistical values
+        """
         self.annualReturn = 0
         self.percentProfitability = 0
         self.winLossRatio = 0
         self.maxDrawdown = 0
         self.annualVolatility = 0
         self.sharpeRatio = 0
+        """
+
+    def RunStrategy(self):
+
+        # This code runs the strategy and updates all statistics/variables upon retrieving the results
+        print()
 
     def updatePrices(self, newPriceList):
 
         # Update the old price list with the new price list
         self.priceList = newPriceList
 
+        # Upon updating the prices, the ending balance will change
         self.updateEndingBalance()
 
         # Update all statistics, since different prices change the starting balance
         self.updateStatistics()
 
-    def updateStartingBalance(self, startingBalance):
+    def updateStartingBalance(self, newStartingBalance):
 
         # Update the starting balance
-        self.startingBalance = startingBalance
+        self.startingBalance = newStartingBalance
 
         self.updateEndingBalance()
 
@@ -58,7 +78,21 @@ class Backtesting:
 
     def updateEndingBalance(self):
 
-        # Update the ending balance by using priceList and startingBalance
+        # Update the ending balance by using priceList, startingBalance and a specific strategy
+        if self.strategy == TREND_FOLLOWING_STRAT:
+
+            # Update the ending balance using the trend following strategy
+            print()
+
+        elif self.strategy == MEAN_STRAT:
+
+            # Update the ending balance using the mean strategy
+            print()
+
+        else:
+
+            # Print an error, since the correct strategy wasn't chosen
+            print("Error! Incorrect strategy selected!")
 
         print()
 
@@ -76,9 +110,9 @@ class Backtesting:
 
         # Update the annual return variable
 
-        # Formula: ((<New Balance> / <Old Balance>) - 1)^(1 / (# of years)) - 1) * 100
+        # Formula: (((<Ending Balance> / <Starting Balance>) - 1)^(365 / (# of days held)) - 1) * 100
 
-        print()
+        self.annualReturn = (((self.endingBalance / self.startingBalance) - 1) ** (365 / self.numDaysHeld) - 1) * 100
 
     def updatePercentProfitability(self):
 
