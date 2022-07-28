@@ -33,7 +33,7 @@ class Backtesting:
         self.priceList = priceList
 
         # Save the number of elements in priceList as the number of days the stock was held
-        self.numDaysHeld = len(priceList)
+        # self.numDaysHeld = len(priceList)
 
         # Save the selected strategy (An int represending the strategy to select)
         self.strategy = strategy
@@ -53,30 +53,155 @@ class Backtesting:
     def RunStrategy(self):
 
         # This code runs the strategy and updates all statistics/variables upon retrieving the results
+
+        # For now, assume that the trend following strategy is the only strategy that exists
+        # This function sets up self.movAvg
+        self.HundDayMovAvg()
+
+        # This function sets up self.buySellPrices
+        self.LineIntersect(self.movAvg)
+
+        # Print these values for reference
+        #print("Stock Prices: ", self.priceList)
+        print("Stock Prices = [", end='')
+        for i in range(len(self.priceList)):
+
+            print(self.priceList[i], ",", end='')
+
+        print("]")
         print()
 
-    def updatePrices(self, newPriceList):
+        print("Moving Average: ", self.movAvg)
+        print("Buy/Sell Prices: ", self.buySellPrices)
+
+        # Finally, call UpdateStats() to make updates to the backtesting results (TODO: Later)
+        # self.UpdateStats()
+
+    def HundDayMovAvg(self):
+
+        # This function uses priceList to calculate the 100 day moving average and return it as a list
+
+        # Initialize the 100 day moving average list (important, especially if the list already contains elements)
+        self.movAvg = []
+
+        # This sum is used to represent the sum of all 100 points, and can be modified to include new points
+        # rather than having to sum all 100 values up again for each point
+        sum = 0
+
+        if len(self.priceList) < 100:
+
+            # There isn't any information to return cause we haven't seen 100 days
+            return []
+
+        # Initialize sum with the first 100 prices
+        for i in range(100):
+
+            sum += self.priceList[i]
+
+        # Save the first index since we just calulcated it
+        self.movAvg.append(sum / 100)
+
+        # From every point onward, we add a new point and remove the last point
+        for i in range(100, len(self.priceList)):
+
+            # Subtract the old price from 100 days ago
+            sum -= self.priceList[i - 100]
+
+            # Add the new price for the next day
+            sum += self.priceList[i]
+
+            # The +1 comes from the fact that we already saved the first element in movAvg
+            #self.movAvg[i - 100 + 1] = sum / 100
+            self.movAvg.append(sum / 100)
+
+        # self.movAvg is now complete and ready to be used
+
+    # linePrices - A list of all prices on a given line/set of points
+    # buyStockPriceAbove - (True) buy when the stock price intersects the line and then goes ABOVE it
+    #                    - (False) buy when the stock price intersects the line and then goes BELOW it
+    def LineIntersect(self, linePrices, buyStockPriceAbove = True):
+
+        # This function uses two lists of prices (self.priceList and linePrices) and finds where they intersect.
+        # Depending on the value of buyStockPriceAbove, buys will be positive and sells will be negative
+
+        # Get the number of points in the line
+        # self.numDaysLine = len(linePrices)
+
+        # Save the intersected prices as an array
+        self.buySellPrices = []
+
+        # Save whether an intersection occurred or not
+        didIntersect = False
+
+        # It shouldn't be the case that there's more days in the strategic line than in the actual stock price
+        if len(linePrices) > len(self.priceList):
+
+            print("Error! linePrices length = ", len(linePrices), "and priceList length = ", len(self.priceList))
+            return []
+
+        for i in range(len(linePrices)):
+
+            # Check if the intersection occurred
+            if didIntersect:
+
+                # Check if the stock price is above the stategic line
+                if self.priceList[i + 100 - 1] > linePrices[i]:
+
+                    # If buyStockPriceAbove is true, then we buy
+                    if buyStockPriceAbove:
+
+                        # Append the price at the line to our intersection array
+                        self.buySellPrices.append(linePrices[i])
+
+                    # This means we sell
+                    else:
+
+                        # Append the NEGATIVE price at the line to our intersection array
+                        self.buySellPrices.append(-linePrices[i])
+
+                    # Reset the status of the intersection flag
+                    didIntersect = False
+
+                # This means the stock price is below the strategic line
+                elif self.priceList[i + 100 - 1] < linePrices[i]:
+
+                    # If buyStockPriceAbove is true, then we sell
+                    if buyStockPriceAbove:
+
+                        # Append the NEGATIVE price at the line to our intersection array
+                        self.buySellPrices.append(-linePrices[i])
+
+                    # This means we sell
+                    else:
+
+                        # Append the price at the line to our intersection array
+                        self.buySellPrices.append(linePrices[i])
+
+                    # Reset the status of the intersection flag
+                    didIntersect = False
+
+            print("Comparing", round(linePrices[i], 1), "and", round(self.priceList[i + 100 - 1], 1), "...")
+            if round(linePrices[i], 1) == round(self.priceList[i + 100 - 1], 1):
+
+                # Mark the intersection for later
+                didIntersect = True
+
+        # self.intersectLine is now complete and ready to be used
+
+    def UpdatePrices(self, newPriceList):
 
         # Update the old price list with the new price list
         self.priceList = newPriceList
 
-        # Upon updating the prices, the ending balance will change
-        self.updateEndingBalance()
-
-        # Update all statistics, since different prices change the starting balance
-        self.updateStatistics()
-
-    def updateStartingBalance(self, newStartingBalance):
+    def UpdateStartingBalance(self, newStartingBalance):
 
         # Update the starting balance
         self.startingBalance = newStartingBalance
 
-        self.updateEndingBalance()
-
         # Since the starting balance changed, so do the statistics
-        self.updateStatistics()
+        # self.updateStatistics()
 
-    def updateEndingBalance(self):
+    """def updateEndingBalance(self):
 
         # Update the ending balance by using priceList, startingBalance and a specific strategy
         if self.strategy == TREND_FOLLOWING_STRAT:
@@ -94,52 +219,70 @@ class Backtesting:
             # Print an error, since the correct strategy wasn't chosen
             print("Error! Incorrect strategy selected!")
 
-        print()
+        print()"""
 
-    def updateStatistics(self):
+    def UpdateStats(self):
 
         # Update all statistics
-        self.updateAnnualReturn()
-        self.updatePercentProfitability()
-        self.updateWinLossRatio()
-        self.updateMaxDrawdown()
-        self.updateAnnualVolatility()
-        self.updateSharpeRatio()
+        self.UpdateAnnualReturn()
+        self.UpdatePercentProfitability()
+        self.UpdateWinLossRatio()
+        self.UpdateMaxDrawdown()
+        self.UpdateAnnualVolatility()
+        self.UpdateSharpeRatio()
 
-    def updateAnnualReturn(self):
+    # This function is primarily for testing purposes
+    def GetStats(self):
+
+        # Print all stats
+        print("Starting Balance: ", self.startingBalance)
+        print("Ending Balance: ", self.endingBalance)
+        print("Annual Return: ", self.annualReturn)
+        print("Percent Profitability: ", "<Insert self.percentProfitability here>")
+        print("Win Loss Ratio: ", "<Insert self.winLossRatio here>")
+        print("Max Drawdown: ", "<Insert self.maxDrawdown here>")
+        print("Annual Volatility: ", "<Insert self.annualVolatility here>")
+        print("Sharpe Ratio: ", "<Insert self.sharpeRatio here>")
+
+    def UpdateAnnualReturn(self):
 
         # Update the annual return variable
 
         # Formula: (((<Ending Balance> / <Starting Balance>) - 1)^(365 / (# of days held)) - 1) * 100
 
-        self.annualReturn = (((self.endingBalance / self.startingBalance) - 1) ** (365 / self.numDaysHeld) - 1) * 100
+        self.annualReturn = (((self.endingBalance / self.startingBalance) - 1) ** (365 / len(self.priceList)) - 1) * 100
 
-    def updatePercentProfitability(self):
+    def UpdatePercentProfitability(self):
 
         # Update the percent profitability variable
 
         print()
 
-    def updateWinLossRatio(self):
+    def UpdateWinLossRatio(self):
 
         # Update the Win/Loss Ratio variable
 
         print()
 
-    def updateMaxDrawdown(self):
+    def UpdateMaxDrawdown(self):
 
         # Update the Win/Loss Ratio variable
 
         print()
 
-    def updateAnnualVolatility(self):
+    def UpdateAnnualVolatility(self):
 
         # Update the Annual Volatility variable
 
         print()
 
-    def updateSharpeRatio(self):
+    def UpdateSharpeRatio(self):
 
         # Update the Sharpe Ratio variable
 
         print()
+
+if __name__ == "__main__":
+
+    # Create a backtesting class instance
+    obj = Backtesting(10000, )

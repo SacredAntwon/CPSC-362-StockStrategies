@@ -7,7 +7,7 @@ class BackTest:
         pass
 
     def movingAverage(self, ticker):
-        stockHistory = obj.getStockHistory(ticker)s
+        stockHistory = obj.getStockHistory(ticker)
         stockHistory = stockHistory[["Adj Close"]]
         stockHistory.rename(columns={"Adj Close":"Price"}, inplace=True)
         stockHistory = stockHistory.iloc[1:]
