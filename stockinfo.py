@@ -32,12 +32,13 @@ class StockInfo:
 
         query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={period1}&period2={period2}&interval={interval}&events=history&includeAdjustedClose=true'
 
-        df = pd.read_csv(query_string)
+        df = pd.read_csv(query_string, index_col='Date', parse_dates=True)
+        #df = pd.read_csv(query_string)
         # Different Index:  Date        Open        High         Low       Close   Adj Close    Volume
         #print(df['Adj Clos'])
         #df.set_index('Date', inplace=True)
-        #df = df.rename_axis(None)
-        #df.to_csv('out.csv')
+        # df = df.rename_axis(None)
+        # df.to_csv('out.csv')
         return df
     # Checks if a file exists
     def fileExists(self, file: str) -> bool:
