@@ -71,8 +71,15 @@ class Backtesting:
         print("]")
         print()
 
+        # Remove this later and replace with UpdateStats(); It's only temporarily for testing
+        self.UpdateEndingBalance()
+        self.UpdateAnnualReturn()
+
         print("Moving Average: ", self.movAvg)
         print("Buy/Sell Prices: ", self.buySellPrices)
+        print("Starting Balance: ", self.startingBalance)
+        print("Ending Balance: ", self.endingBalance)
+        print("Annual Return: ", self.annualReturn)
 
         # Finally, call UpdateStats() to make updates to the backtesting results (TODO: Later)
         # self.UpdateStats()
@@ -122,7 +129,7 @@ class Backtesting:
     def LineIntersect(self, linePrices, buyStockPriceAbove = True):
 
         # This function uses two lists of prices (self.priceList and linePrices) and finds where they intersect.
-        # Depending on the value of buyStockPriceAbove, buys will be positive and sells will be negative
+        # Depending on the value of buyStockPriceAbove, buys will be negative and sells will be positive
 
         # Get the number of points in the line
         # self.numDaysLine = len(linePrices)
@@ -133,6 +140,10 @@ class Backtesting:
         # Save whether an intersection occurred or not
         didIntersect = False
 
+        # Save whether the stock price is above or below the strategic line or not
+        stockIsAbove = False
+        stockIsBelow = False
+
         # It shouldn't be the case that there's more days in the strategic line than in the actual stock price
         if len(linePrices) > len(self.priceList):
 
@@ -141,7 +152,62 @@ class Backtesting:
 
         for i in range(len(linePrices)):
 
-            # Check if the intersection occurred
+            # Check if both flags are unset
+            if not stockIsBelow and not stockIsAbove:
+
+                # Double check the flags to make sure 
+                stockIsBelow = round(self.priceList[i + 100 - 1], 2) < round(linePrices[i], 2)
+                stockIsAbove = round(self.priceList[i + 100 - 1], 2) > round(linePrices[i], 2)
+
+            # Check if the stock price is above the strategic line
+            if round(self.priceList[i + 100 - 1], 2) > round(linePrices[i], 2) and stockIsBelow:
+
+                # Check the buyStockPriceAbove flag to see whether we should buy or sell
+                if buyStockPriceAbove:
+
+                    # Buy the stock
+                    self.buySellPrices.append(-linePrices[i])
+
+                else:
+
+                    # Sell the stock
+                    self.buySellPrices.append(linePrices[i])
+
+                # Set the stockIsAbove flag to true
+                stockIsAbove = True
+
+                # Reset the stockIsBelow flag to false
+                stockIsBelow = False
+
+            # Check if the stock price is below the strategic line
+            elif round(self.priceList[i + 100 - 1], 2) < round(linePrices[i], 2) and stockIsAbove:
+
+                if buyStockPriceAbove:
+
+                    # Sell the stock
+                    self.buySellPrices.append(linePrices[i])
+
+                else:
+
+                    # Buy the stock
+                    self.buySellPrices.append(-linePrices[i])
+
+                # Set the stockIsBelow flag to true
+                stockIsBelow = True
+
+                # Set the stockIsAbove flag to false
+                stockIsAbove = False
+
+            # Check if the stock prices are equal
+            elif round(self.priceList[i + 100 - 1], 2) == round(linePrices[i], 2):
+
+                # Reset all flags
+                stockIsBelow = False
+                stockIsAbove = False
+
+
+
+            """# Check if the intersection occurred
             if didIntersect:
 
                 # Check if the stock price is above the stategic line
@@ -184,7 +250,7 @@ class Backtesting:
             if round(linePrices[i], 1) == round(self.priceList[i + 100 - 1], 1):
 
                 # Mark the intersection for later
-                didIntersect = True
+                didIntersect = True"""
 
         # self.intersectLine is now complete and ready to be used
 
@@ -200,6 +266,30 @@ class Backtesting:
 
         # Since the starting balance changed, so do the statistics
         # self.updateStatistics()
+
+    # We use balance and end up with self.endingBalance
+    def UpdateEndingBalance(self):
+        
+        # Store the sum of the price of the stock at all points and eventually store the average overall price
+        # priceListAvg = sum(self.priceList) / len(self.priceList)
+
+        # Assume the ending balance is the same as the starting balance for now
+        self.endingBalance = self.startingBalance
+
+        for share in self.buySellPrices:
+
+            # Number of shares we can buy for our portfolio
+            numShares = (0.01 * self.endingBalance) / abs(share)
+
+            # Check if the transaction is negative (buy)
+            if share < 0:
+
+                self.endingBalance -= (numShares * share)
+                print("Bought " + str(numShares) + " at price: " + str(share))
+                print("New Balance: " + str(self.endingBalance))
+
+        # self.endingBalance is now updated
+
 
     """def updateEndingBalance(self):
 
@@ -222,6 +312,9 @@ class Backtesting:
         print()"""
 
     def UpdateStats(self):
+
+        # Update the ending balance
+        self.UpdateEndingBalance()
 
         # Update all statistics
         self.UpdateAnnualReturn()
@@ -250,7 +343,7 @@ class Backtesting:
 
         # Formula: (((<Ending Balance> / <Starting Balance>) - 1)^(365 / (# of days held)) - 1) * 100
 
-        self.annualReturn = (((self.endingBalance / self.startingBalance) - 1) ** (365 / len(self.priceList)) - 1) * 100
+        self.annualReturn = (((self.endingBalance / self.startingBalance) + 1) ** (365 / len(self.priceList)) - 1) * 100
 
     def UpdatePercentProfitability(self):
 

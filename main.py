@@ -1,10 +1,10 @@
 import stockinfo
 import backtesting
-import backtest
+#import backtest
 # Call the functions
 
 obj = stockinfo.StockInfo()
-backt = backtest.BackTest()
+# backt = backtest.BackTest()
 
 print("Getting stock information from Yahoo Finance. Please wait a few seconds!")
 
@@ -21,11 +21,11 @@ prices = obj.getStockHistory("IBM")["Open"]
 
 #print(prices)
 
-#bt = backtesting.Backtesting(10000, prices, 0)
+bt = backtesting.Backtesting(10000, prices, 0)
 
 # Uncomment this after you're done testing
 
-print(len(prices))
+"""print(len(prices))
 
 print("Select a stock from the list above.")
 userStock = input("\nType the ticker you would like to view more information \
@@ -43,4 +43,4 @@ while (userStock != 'exit'):
         #backtest.getStats(stock)
         #print(backtest.getStats(stock))
     userStock = input("Type the ticker you would like to view more information \
-about(Case Sensitive) or 'exit' to end the program: ")
+about(Case Sensitive) or 'exit' to end the program: ")"""
