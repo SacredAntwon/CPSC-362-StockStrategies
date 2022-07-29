@@ -23,6 +23,15 @@ class StockInfo:
     # Methods
 
     # -------------------------------------------------------------------
+    def keepImportantInfo(self, stats):
+        statDict = {'annualReturn': stats['Return (Ann.) [%]'],
+                    'profitFactor': stats['Profit Factor'],
+                    'winRate': stats['Win Rate [%]'], # ASK IF ITS JUST WIN RATE
+                    'maxDrawdown': stats['Max. Drawdown [%]'],
+                    'annualVolatility': stats['Volatility (Ann.) [%]'],
+                    'sharpeRatio': stats['Sharpe Ratio']}
+
+        return statDict
 
     def getStockHistory(self, ticker):
         #Year, Month, Day, Hour, Minute

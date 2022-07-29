@@ -1,10 +1,10 @@
 import stockinfo
 import backtesting
 import smacro
-import meanrev
+import signalAndTrailing
 from backtesting import Backtest, Strategy
 # Call the functions
-meanr = meanrev.MeanReversion()
+#meanr = meanrev.MeanReversion()
 
 obj = stockinfo.StockInfo()
 #backt = backtest.SMAcross()
@@ -21,16 +21,29 @@ for name in allStocks:
     print(name)
 
 # Get the list of prices (this information will be passed to the backtesting class)
-prices = obj.getStockHistory("AAPL")["Open"]
+#prices = obj.getStockHistory("AAPL")["Open"]
 
 #print(prices)
 
-bt = backtesting.Backtesting(100000, prices, 0)
+#bt = backtesting.Backtesting(100000, prices, 0)
 
 
 # Uncomment this after you're done testing
 
 #print(len(prices))
+
+stock = obj.getStockHistory('IBM')
+
+movingAvg = Backtest(stock, smacro.SmaCross, cash=100000, commission= 0,
+              exclusive_orders=True)
+
+sigAndTrail = Backtest(stock, signalAndTrailing.SmaCross, cash=100000, commission= 0,
+              exclusive_orders=True)
+statsMove = movingAvg.run()
+statsSigTrail = sigAndTrail.run()
+
+print(obj.keepImportantInfo(statsMove))
+print(obj.keepImportantInfo(statsSigTrail))
 
 print("Select a stock from the list above.")
 userStock = input("\nType the ticker you would like to view more information \

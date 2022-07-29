@@ -3,7 +3,7 @@ from backtesting import Backtest, Strategy
 from backtesting.lib import crossover
 from backtesting.test import SMA
 
-obj = stockinfo.StockInfo()
+#obj = stockinfo.StockInfo()
 
 class SmaCross(Strategy):
     def init(self):
@@ -17,13 +17,9 @@ class SmaCross(Strategy):
         elif crossover(self.ma2, self.ma1):
             self.sell()
 
-stock = obj.getStockHistory('IBM')
 
-bt = Backtest(stock, SmaCross, cash=100000, commission= 0,
-              exclusive_orders=True)
-stats = bt.run()
 #bt.plot()
-print(stats)
+#print(stats['Best Trade [%]'])
 
 
 # class BackTest:
