@@ -343,7 +343,7 @@ class Backtesting:
 
         # Formula: (((<Ending Balance> / <Starting Balance>) - 1)^(365 / (# of days held)) - 1) * 100
 
-        self.annualReturn = (((self.endingBalance / self.startingBalance) + 1) ** (365 / len(self.priceList)) - 1) * 100
+        self.annualReturn = ((self.endingBalance / self.startingBalance) ** (365 / len(self.priceList)) - 1) * 100
 
     def UpdatePercentProfitability(self):
 
