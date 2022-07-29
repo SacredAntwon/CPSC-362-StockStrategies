@@ -17,11 +17,11 @@ for name in allStocks:
     print(name)
 
 # Get the list of prices (this information will be passed to the backtesting class)
-prices = obj.getStockHistory("IBM")["Open"]
+prices = obj.getStockHistory("AAPL")["Open"]
 
 #print(prices)
 
-bt = backtesting.Backtesting(10000, prices, 0)
+bt = backtesting.Backtesting(100000, prices, 0)
 
 # Uncomment this after you're done testing
 

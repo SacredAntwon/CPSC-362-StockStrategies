@@ -273,19 +273,68 @@ class Backtesting:
         # Store the sum of the price of the stock at all points and eventually store the average overall price
         # priceListAvg = sum(self.priceList) / len(self.priceList)
 
+        # Keep track of the number of shares bought/sold each time
+        self.shareAmtHistory = []
+
         # Assume the ending balance is the same as the starting balance for now
         self.endingBalance = self.startingBalance
 
-        for share in self.buySellPrices:
+        # Count how many shares we own of the stock
+        self.numShares = 0
 
-            # Number of shares we can buy for our portfolio
-            numShares = (0.01 * self.endingBalance) / abs(share)
+        # Number of shares we can buy for our portfolio
+        numSharesToGet = (0.01 * self.endingBalance) / (sum(self.priceList) / len(self.priceList))
+
+        for sharePrice in self.buySellPrices:
 
             # Check if the transaction is negative (buy)
-            if share < 0:
+            # Check if our balance is above zero
+            if sharePrice < 0 and self.endingBalance > 0:
 
-                self.endingBalance -= (numShares * share)
-                print("Bought " + str(numShares) + " at price: " + str(share))
+                # Check if our balance can't afford to buy all shares
+                if self.endingBalance < numSharesToGet * -sharePrice:
+
+                    # This means the number of shares we should buy is <ending balance> / <share price>
+                    self.numShares += (self.endingBalance / -sharePrice)
+
+                    # Add the number of shares bought at this price to our share number record
+                    self.shareAmtHistory.append(self.endingBalance / -sharePrice)
+
+                    print("After this purchase I'm going to run out of money!")
+
+                    print("Bought " + str(self.endingBalance / -sharePrice) + " shares at price: " + str(-sharePrice))
+
+                    # Set our balance to 0, since we just spent the remaining money we had left
+                    self.endingBalance = 0
+                    
+                    print("New Balance: " + str(self.endingBalance))
+
+                else:
+
+                    # Add numSharesToGet to our total number of shares
+                    self.numShares += numSharesToGet
+
+                    # Add the number of shares bought at this price to our share number record
+                    self.shareAmtHistory.append(numSharesToGet)
+
+                    print("Bought " + str(numSharesToGet) + " shares at price: " + str(-sharePrice))
+
+                    # Subtract the transaction amount from the ending balance
+                    self.endingBalance -= (numSharesToGet * -sharePrice)
+
+                    print("New Balance: " + str(self.endingBalance))
+
+            # The transation price is positive (can't be zero obviously) (sell)
+            else:
+
+                print("Sold " + str(self.numShares) + " shares at price: " + str(sharePrice))
+
+                # Add the amount from selling back to our account
+                self.endingBalance += (self.numShares * sharePrice)
+
+                # Remove all shares from our account
+                self.numShares = 0
+
                 print("New Balance: " + str(self.endingBalance))
 
         # self.endingBalance is now updated
@@ -349,6 +398,10 @@ class Backtesting:
 
         # Update the percent profitability variable
 
+        #for i in range(len(self.buySellPrices)):
+
+
+
         print()
 
     def UpdateWinLossRatio(self):
@@ -374,8 +427,3 @@ class Backtesting:
         # Update the Sharpe Ratio variable
 
         print()
-
-if __name__ == "__main__":
-
-    # Create a backtesting class instance
-    obj = Backtesting(10000, )
