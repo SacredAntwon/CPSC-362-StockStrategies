@@ -156,22 +156,26 @@ class Backtesting:
             if not stockIsBelow and not stockIsAbove:
 
                 # Double check the flags to make sure 
-                stockIsBelow = round(self.priceList[i + 100 - 1], 2) < round(linePrices[i], 2)
-                stockIsAbove = round(self.priceList[i + 100 - 1], 2) > round(linePrices[i], 2)
+                stockIsBelow = self.priceList[i + 100 - 1] < linePrices[i]
+                stockIsAbove = self.priceList[i + 100 - 1] > linePrices[i]
 
             # Check if the stock price is above the strategic line
-            if round(self.priceList[i + 100 - 1], 2) > round(linePrices[i], 2) and stockIsBelow:
+            if self.priceList[i + 100 - 1] > linePrices[i] and stockIsBelow:
+
+                #print(str(self.priceList[i + 100 - 1]) + " is greater than " + str(linePrices[i]) + "!")
 
                 # Check the buyStockPriceAbove flag to see whether we should buy or sell
                 if buyStockPriceAbove:
 
                     # Buy the stock
-                    self.buySellPrices.append(-linePrices[i])
+                    #self.buySellPrices.append(-linePrices[i])
+                    self.buySellPrices.append(-self.priceList[i + 100 - 1])
 
                 else:
 
                     # Sell the stock
-                    self.buySellPrices.append(linePrices[i])
+                    #self.buySellPrices.append(linePrices[i])
+                    self.buySellPrices.append(self.priceList[i + 100 - 1])
 
                 # Set the stockIsAbove flag to true
                 stockIsAbove = True
@@ -180,17 +184,21 @@ class Backtesting:
                 stockIsBelow = False
 
             # Check if the stock price is below the strategic line
-            elif round(self.priceList[i + 100 - 1], 2) < round(linePrices[i], 2) and stockIsAbove:
+            elif self.priceList[i + 100 - 1] < linePrices[i] and stockIsAbove:
+
+                #print(str(self.priceList[i + 100 - 1]) + " is less than " + str(linePrices[i]) + "!")
 
                 if buyStockPriceAbove:
 
                     # Sell the stock
-                    self.buySellPrices.append(linePrices[i])
+                    #self.buySellPrices.append(linePrices[i])
+                    self.buySellPrices.append(self.priceList[i + 100 - 1])
 
                 else:
 
                     # Buy the stock
-                    self.buySellPrices.append(-linePrices[i])
+                    #self.buySellPrices.append(-linePrices[i])
+                    self.buySellPrices.append(-self.priceList[i + 100 - 1])
 
                 # Set the stockIsBelow flag to true
                 stockIsBelow = True
@@ -199,7 +207,7 @@ class Backtesting:
                 stockIsAbove = False
 
             # Check if the stock prices are equal
-            elif round(self.priceList[i + 100 - 1], 2) == round(linePrices[i], 2):
+            elif self.priceList[i + 100 - 1] == linePrices[i]:
 
                 # Reset all flags
                 stockIsBelow = False
@@ -336,6 +344,16 @@ class Backtesting:
                 self.numShares = 0
 
                 print("New Balance: " + str(self.endingBalance))
+
+        # Check if we still own any shares, because we need to sell them and add to our balance if that's the case
+        if self.numShares != 0:
+
+            print("I'm liquidating the shares I own ( " + str(self.numShares) + " ) at price: $" + str(self.priceList[-1]) + "...")
+            self.endingBalance += (self.numShares * self.priceList[-1])
+            print("New Balance: " + str(self.endingBalance))
+
+            # Remove all shares from our account
+            self.numShares = 0
 
         # self.endingBalance is now updated
 

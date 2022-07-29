@@ -1,10 +1,9 @@
 import stockinfo
 import backtesting
-import smacro
-import meanrev
-from backtesting import Backtest, Strategy
+#import smacro
+#import meanrev
 # Call the functions
-meanr = meanrev.MeanReversion()
+#meanr = meanrev.MeanReversion()
 
 obj = stockinfo.StockInfo()
 #backt = backtest.SMAcross()
@@ -21,7 +20,7 @@ for name in allStocks:
     print(name)
 
 # Get the list of prices (this information will be passed to the backtesting class)
-prices = obj.getStockHistory("AAPL")["Open"]
+prices = obj.getStockHistory("HD")["Open"]
 
 #print(prices)
 
@@ -32,7 +31,8 @@ bt = backtesting.Backtesting(100000, prices, 0)
 
 #print(len(prices))
 
-print("Select a stock from the list above.")
+# Uncomment this chunk of lines later if testing is needed
+"""print("Select a stock from the list above.")
 userStock = input("\nType the ticker you would like to view more information \
 about(Case Sensitive) or 'exit' to end the program: ")
 
@@ -48,4 +48,4 @@ while (userStock != 'exit'):
         #backtest.getStats(stock)
         #print(backtest.getStats(stock))
     userStock = input("Type the ticker you would like to view more information \
-about(Case Sensitive) or 'exit' to end the program: ")
+about(Case Sensitive) or 'exit' to end the program: ")"""
