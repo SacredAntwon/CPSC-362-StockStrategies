@@ -14,7 +14,7 @@ Sharpe  Ratio  (the  reward/risk  ratio, calculated by an annualized return / an
 TREND_FOLLOWING_STRAT = 0
 MEAN_STRAT = 1
 
-class Backtesting:
+class Backtest:
 
     # We have to store the list of prices for a specific ticker as a property
     # Each time the user updates the list of prices, the class must automatically update all
