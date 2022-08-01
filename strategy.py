@@ -51,12 +51,13 @@ class SigTrailCross(SignalStrategy,
 def selectStrategy(strat, ticker):
     obj = stockinfo.StockInfo()
     stock = obj.getStockHistory(ticker)
+    money = 1000000
 
     if strat == 'TF':
-        stats = Backtest(stock, SmaCross, cash=100000, commission= 0, exclusive_orders=True)
+        stats = Backtest(stock, SmaCross, cash=money, commission= 0, exclusive_orders=True)
 
     elif strat == 'ST':
-        stats = Backtest(stock, SigTrailCross, cash=100000, commission= 0, exclusive_orders=True)
+        stats = Backtest(stock, SigTrailCross, cash=money, commission= 0, exclusive_orders=True)
 
     else:
         return False

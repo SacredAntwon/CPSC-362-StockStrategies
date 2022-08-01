@@ -33,18 +33,18 @@ for name in allStocks:
 # Uncomment this after you're done testing
 
 #print(len(prices))
-def runBackTest(ticker):
-    stock = obj.getStockHistory(ticker)
-
-    movingAvg = Backtest(stock, strategy.SmaCross, cash=100000, commission= 0, exclusive_orders=True)
-
-    sigAndTrail = Backtest(stock, strategy.SigTrailCross, cash=100000, commission= 0, exclusive_orders=True)
-
-    statsMove = movingAvg.run()
-    statsSigTrail = sigAndTrail.run()
-
-    print(obj.keepImportantInfo(statsMove))
-    print(obj.keepImportantInfo(statsSigTrail))
+# def runBackTest(ticker):
+#     stock = obj.getStockHistory(ticker)
+#
+#     movingAvg = Backtest(stock, strategy.SmaCross, cash=100000, commission= 0, exclusive_orders=True)
+#
+#     sigAndTrail = Backtest(stock, strategy.SigTrailCross, cash=100000, commission= 0, exclusive_orders=True)
+#
+#     statsMove = movingAvg.run()
+#     statsSigTrail = sigAndTrail.run()
+#
+#     print(obj.keepImportantInfo(statsMove))
+#     print(obj.keepImportantInfo(statsSigTrail))
 
 # Uncomment this chunk of lines later if testing is needed
 print("Select a stock from the list above.")
