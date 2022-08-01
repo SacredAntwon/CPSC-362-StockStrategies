@@ -1,5 +1,5 @@
 import stockinfo
-import backtesting
+import backtest
 import smacro
 import signalAndTrailing
 from backtesting import Backtest, Strategy

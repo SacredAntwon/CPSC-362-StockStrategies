@@ -15,12 +15,12 @@ class DisplayClass(tk.Tk):
 
         # configure the columns in the grid
         self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=3)
+        self.columnconfigure(1, weight=1)
         self.columnconfigure(2, weight=1)
 
-        self.rowconfigure(0, weight=5)
-        self.rowconfigure(1, weight=5)
-        self.rowconfigure(2, weight=4)
+        self.rowconfigure(0, weight=1)
+        self.rowconfigure(1, weight=1)
+        #self.rowconfigure(2, weight=1)
 
         self.create_stockinfo()
         self.create_buttons()
