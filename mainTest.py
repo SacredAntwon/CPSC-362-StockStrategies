@@ -46,7 +46,6 @@ def runBackTest(ticker):
     print(obj.keepImportantInfo(statsMove))
     print(obj.keepImportantInfo(statsSigTrail))
 
-print("Select a stock from the list above.")
 # Uncomment this chunk of lines later if testing is needed
 print("Select a stock from the list above.")
 userStock = input("\nType the ticker you would like to view more information \
