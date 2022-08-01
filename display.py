@@ -192,6 +192,57 @@ class DisplayClass(tk.Tk):
         # pady=(top padding, bottom padding)
         portfolioButton.grid(column=0, row=0, pady=(0, 60))
 
+    # stockNames - A list of ticker(s)
+    # dataToDisplay - One or more stocks to display
+    # isStrategy - (True) The data will be assumed to be in strategy-display format (Win-Loss Ratio, % Profitability, etc)
+    # isStrategy - (False) The data will be assumed to be in API-call format (Open, Close, etc)
+    def create_new_window(self, stockNames, dataToDisplay, isStrategy):
+
+        # Create a new window
+        newWindow = tk.Toplevel(self)
+
+        # Set the geometry of the new window
+        newWindow.geometry("500x500")
+
+        # Configure the column(s)
+        newWindow.columnconfigure(0, weight=1)
+        
+        # Configure the row(s)
+        newWindow.rowconfigure(0, weight=1)
+
+        # These two variables will be declared as global in stockinfo.py
+
+        obj = stockinfo.StockInfo()
+
+        obj.readJSONFile()
+
+        stockDict = obj.dowJones
+        stockData = obj.keys
+
+        # Display data on the window in strategy format
+        if isStrategy:
+
+            # We need to display Annualized Return, Win/Loss Ratio, Max Drawdown, Annualized Volatility and the Sharpe Ratio
+            categories = ["Annualized Return", "Win/Loss Ratio", "Max Drawdown", "Annualized Volatility", "Sharpe Ratio"]
+
+            for index in range(len(categories)):
+
+                # Create each category inside the stockInfo frame
+                stockCategory = tk.Label(newWindow, text=categories[index])
+                stockCategory.grid(column=index, row=0)
+
+                # Add here the displays for each stock retrieved from the API call
+                for i in range(len(stockNames)):
+
+                    stockName = tk.Label(newWindow, text=stockNames[i], highlightcolor="blue", highlightthickness=4)
+                    stockName.grid(column=0, row=i+1)
+
+                    for j in range(len(stockData)):
+
+                        stockCategory = tk.Label(stockInfo, text=stockDict[stockNames[i]][stockData[j]])
+                        stockCategory.grid(column=j+1, row=i+1)
+
+
 
 if __name__ == "__main__":
 

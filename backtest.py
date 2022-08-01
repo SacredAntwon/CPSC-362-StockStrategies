@@ -1,3 +1,6 @@
+# For testing at the bottom of this code
+import stockinfo
+
 """
 
 The common metrics used for backtesting include:
@@ -445,3 +448,11 @@ class Backtest:
         # Update the Sharpe Ratio variable
 
         print()
+
+if __name__ == "__main__":
+
+    stockInfo = stockinfo.StockInfo()
+
+    stockInfo.readJSONFile()
+
+    obj = Backtest(1000000, stockInfo.getStockHistory("V")["Open"], 0)

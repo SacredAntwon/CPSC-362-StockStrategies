@@ -1,6 +1,6 @@
 import stockinfo
 import backtest
-import smacro
+import strategy
 import signalAndTrailing
 from backtesting import Backtest, Strategy
 #import smacro
@@ -38,7 +38,7 @@ for name in allStocks:
 def runBackTest(ticker):
     stock = obj.getStockHistory(ticker)
 
-    movingAvg = Backtest(stock, smacro.SmaCross, cash=100000, commission= 0, exclusive_orders=True)
+    movingAvg = Backtest(stock, strategy.SmaCross, cash=100000, commission= 0, exclusive_orders=True)
 
     sigAndTrail = Backtest(stock, signalAndTrailing.SmaCross, cash=100000, commission= 0, exclusive_orders=True)
 

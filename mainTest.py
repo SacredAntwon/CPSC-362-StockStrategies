@@ -59,6 +59,7 @@ while (userStock != 'exit'):
         print(obj.displayInfo(userStock))
         #runBackTest(userStock)
         print(strategy.selectStrategy(userStrategy, userStock))
+        print(strategy.selectStrategy(userStrategy, userStock)["Exposure Time [%]"])
         #print(backt.movingAverage(userStock))
         #print(obj.getStockHistory(userStock))
         #stock = obj.getStockHistory(userStock)
