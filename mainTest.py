@@ -50,18 +50,22 @@ def runBackTest(ticker):
 print("Select a stock from the list above.")
 userStock = input("\nType the ticker you would like to view more information \
 about(Case Sensitive) or 'exit' to end the program: ")
+userStrategy = input("\nType the strategy you would like to view (TF or ST): ")
 
 while (userStock != 'exit'):
     if (userStock not in allStocks):
         print("\nNot A Valid Ticker!")
     else:
         print(obj.displayInfo(userStock))
-        runBackTest(userStock)
+        #runBackTest(userStock)
+        print(strategy.selectStrategy(userStrategy, userStock))
         #print(backt.movingAverage(userStock))
         #print(obj.getStockHistory(userStock))
         #stock = obj.getStockHistory(userStock)
         #print(stock)
         #backtest.getStats(stock)
         #print(backtest.getStats(stock))
+
     userStock = input("Type the ticker you would like to view more information \
 about(Case Sensitive) or 'exit' to end the program: ")
+    userStrategy = input("\nType the strategy you would like to view (TF or ST): ")

@@ -47,6 +47,22 @@ class SigTrailCross(SignalStrategy,
         # Set trailing stop-loss to 2x ATR using
         # the method provided by `TrailingStrategy`
         self.set_trailing_sl(2)
+
+def selectStrategy(strat, ticker):
+    obj = stockinfo.StockInfo()
+    stock = obj.getStockHistory(ticker)
+
+    if strat == 'TF':
+        stats = Backtest(stock, SmaCross, cash=100000, commission= 0, exclusive_orders=True)
+
+    elif strat == 'ST':
+        stats = Backtest(stock, SigTrailCross, cash=100000, commission= 0, exclusive_orders=True)
+
+    else:
+        return False
+
+    statInfo = stats.run()
+    return statInfo
 #bt.plot()
 #print(stats['Best Trade [%]'])
 
