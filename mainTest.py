@@ -1,10 +1,8 @@
 import stockinfo
 import backtest
-import smacro
-import signalAndTrailing
+import strategy
 from backtesting import Backtest, Strategy
-#import smacro
-#import meanrev
+
 # Call the functions
 #meanr = meanrev.MeanReversion()
 
@@ -38,9 +36,9 @@ for name in allStocks:
 def runBackTest(ticker):
     stock = obj.getStockHistory(ticker)
 
-    movingAvg = Backtest(stock, smacro.SmaCross, cash=100000, commission= 0, exclusive_orders=True)
+    movingAvg = Backtest(stock, strategy.SmaCross, cash=100000, commission= 0, exclusive_orders=True)
 
-    sigAndTrail = Backtest(stock, signalAndTrailing.SmaCross, cash=100000, commission= 0, exclusive_orders=True)
+    sigAndTrail = Backtest(stock, strategy.SigTrailCross, cash=100000, commission= 0, exclusive_orders=True)
 
     statsMove = movingAvg.run()
     statsSigTrail = sigAndTrail.run()
