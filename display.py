@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter.font import BOLD
 import stockinfo
 
 class DisplayClass(tk.Tk):
@@ -10,7 +11,7 @@ class DisplayClass(tk.Tk):
 
         #self.geometry("240x100")
         self.geometry("900x1200")
-        self.title('Login')
+        self.title('Main Page')
         #self.resizable(0, 0)
 
         # configure the columns in the grid
@@ -22,11 +23,36 @@ class DisplayClass(tk.Tk):
         self.rowconfigure(1, weight=1)
         #self.rowconfigure(2, weight=1)
 
-        self.create_stockinfo()
-        self.create_buttons()
+        # Initialize the stockinfo object by getting stock info
+        self.makeAPICalls()
+
+        self.create_layout()
+
+    # This function calls all functions related to displaying GUI information
+    def create_layout(self):
+
+        # Place the information from the API call in the GUI
+        self.create_display_stock_info()
+
+        self.create_search()
+
+        self.create_portfolio()
+
+    def makeAPICalls(self):
+
+        # Create the object
+        self.obj = stockinfo.StockInfo()
+
+        # Read from the JSON file
+        self.obj.readJSONFile()
+
+        # Store all relevant information in local variables within our class
+        self.stockDict = self.obj.dowJones
+        self.stockData = self.obj.keys
+        self.stockNames = self.obj.getStockNames()
 
     # This function creates the widgets for all stock info
-    def create_stockinfo(self):
+    def create_display_stock_info(self):
 
         # Note: A scrollbar requires a Canvas, which needs to encompass the Frame and it's a mess we don't want to deal with
 
@@ -42,7 +68,7 @@ class DisplayClass(tk.Tk):
 
         # Create the underlying frame that holds all stock information
         stockInfo = tk.Frame(self)
-        stockInfo.grid(column=1, row=1)
+        stockInfo.grid(column=1, row=1, sticky=tk.N)
 
         categories = ["Stock", "Open", "Close", "Bid", "Ask", "Vol", "PE", "EPS", "ARat"]
 
@@ -63,72 +89,66 @@ class DisplayClass(tk.Tk):
                 stockCategory = tk.Label(stockInfo, text=stockDict[stockNames[i]][stockData[j]])
                 stockCategory.grid(column=j+1, row=i+1)
 
-        #myButton.pack()
-        #stockInfo.pack()
+    # This function is used to create the search mechanics, including the ticker dropdown, strategy dropdown and search button
+    def create_search(self):
 
-        """# username
-        username_label = ttk.Label(self, text="Username:")
-        username_label.grid(column=0, row=0, sticky=tk.W, padx=5, pady=5)
+        # Create the frame the contains this information and place it on the grid above the stock information
+        searchFrame = tk.Frame(self)
+        searchFrame.grid(column=1, row=0)
 
-        username_entry = ttk.Entry(self)
-        username_entry.grid(column=1, row=0, sticky=tk.E, padx=5, pady=5)
+        # Within the frame, first display a "Ticker" Label
+        tickerLabel = tk.Label(searchFrame, text="Ticker: ")
+        tickerLabel.grid(column=0, row=0)
 
-        # password
-        password_label = ttk.Label(self, text="Password:")
-        password_label.grid(column=0, row=1, sticky=tk.W, padx=5, pady=5)
+        # Create a list containing the ticker name information in the dropdown menu
+        tickerNames = []
 
-        password_entry = ttk.Entry(self,  show="*")
-        password_entry.grid(column=1, row=1, sticky=tk.E, padx=5, pady=5)
+        # Next, create the variable to store user input from the dropdown
+        tickerInput = tk.StringVar()
 
-        # login button
-        login_button = ttk.Button(self, text="Login")
-        login_button.grid(column=1, row=3, sticky=tk.E, padx=5, pady=5)"""
+        # Next, display the dropdown menu containing all ticker names
+        tickerDropdown = 
 
+        """# Create a frame for the Dispaly Stocks button
+        displayStocksFrame = tk.Frame(self)
+        displayStocksFrame.grid(column=0, row=0)
 
-    def create_buttons(self):
-
-        #stockButtons = tk.Frame(self)
-        #stockButtons.grid(column=1, row=0)
-
-        """# Create the Display Stocks button
-        displayStocks = tk.Button(self, text="Display Stocks")
-        displayStocks.grid(column=0, row=1)
-
-        # Create the menu for backtesting
-        menu = tk.StringVar()
-        menu.set("Backtesting Options")
-
-        # Create the information to be displayed in the dropdown
-        dropDown = tk.OptionMenu(self, menu, "Option1", "Option2")
-        dropDown.grid(column=1, row=1)
-
-        # Create the Show Profile button
-        displayStocks = tk.Button(self, text="Show Profile")
-        displayStocks.grid(column=2, row=1)"""
-
-        #stockButtons = tk.Frame(self)
-        #stockButtons.grid(column=1, row=0)
+        # Create the lable for Display Stocks
+        displayStocksLabel = tk.Label(displayStocksFrame, text="Display Stocks: ")
+        displayStocksLabel.grid(column=0, row=0)
 
         # Create the Display Stocks button
-        displayStocks = tk.Button(self, text="Display Stocks", bg="lightblue")
-        displayStocks.grid(column=1, row=0, sticky=tk.SW)
+        displayStocks = tk.Button(displayStocksFrame, text="Display Stocks", bg="lightblue")
+        displayStocks.grid(column=1, row=0)
 
         # Create the menu for backtesting
         menu = tk.StringVar()
         menu.set("Backtesting Options")
 
+        # The options to choose from
+        options = ["Strategy 1", "Strategy 2"]
+
+        # This gets the strategy selected by the user
+        def getStrategy(self):
+
+            print(menu.get())
+
+        # Create a label widget for the user to see the name of the dropdown
+        strategyInfo = tk.Label(self, text="Strategy Type: ")
+        strategyInfo.grid(column=1, row=0)
+
         # Create the information to be displayed in the dropdown
-        dropDown = tk.OptionMenu(self, menu, "Option1", "Option2")
+        dropDown = tk.OptionMenu(self, menu, *options, command=getStrategy)
         dropDown.config(bg="lightgray")
-        dropDown.grid(column=1, row=0, sticky=tk.S)
+        dropDown.grid(column=1, row=0)
 
         # Create the Show Profile button
-        displayStocks = tk.Button(self, text="Show Profile", bg="lightgreen")
-        displayStocks.grid(column=1, row=0, sticky=tk.SE)
+        displayStocks = tk.Button(self, text="Display Portfolio", bg="lightgreen")
+        displayStocks.grid(column=2, row=0)"""
 
-    #def add_portfolio(self):
+    def create_portfolio(self):
 
-
+        pass
 
 if __name__ == "__main__":
 
