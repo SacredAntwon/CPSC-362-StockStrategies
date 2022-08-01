@@ -21,9 +21,10 @@ class DisplayClass(tk.Tk):
 
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
-        #self.rowconfigure(2, weight=1)
+        self.rowconfigure(2, weight=1)
 
         # Initialize the stockinfo object by getting stock info
+        # TODO: Remove the makeAPICalls() function and pass the info to __init__() from main.py
         self.makeAPICalls()
 
         self.create_layout()
@@ -96,18 +97,48 @@ class DisplayClass(tk.Tk):
         searchFrame = tk.Frame(self)
         searchFrame.grid(column=1, row=0)
 
-        # Within the frame, first display a "Ticker" Label
-        tickerLabel = tk.Label(searchFrame, text="Ticker: ")
+        # Within the frame, display a "Ticker" Label
+        tickerLabel = tk.Label(searchFrame, text="Ticker: ", font="BOLD")
         tickerLabel.grid(column=0, row=0)
 
-        # Create a list containing the ticker name information in the dropdown menu
-        tickerNames = []
+        # Within the frame, display a "Strategy" Label
+        strategyLabel = tk.Label(searchFrame, text="Strategy: ", font="BOLD")
+        strategyLabel.grid(column=0, row=1)
 
-        # Next, create the variable to store user input from the dropdown
+        # Within the frame, display a "Search" Button
+        # TODO: Modify this search button to call a function to create a new window
+        searchButton = tk.Button(searchFrame, text="Search")
+        searchButton.grid(column=1, row=2, pady=10)
+
+        # Create a list containing the ticker name information in the dropdown menu
+        tickerNames = self.stockNames
+
+        # Create a list containing the list of all strategy names
+        # Note: This is hard coded, but can be changed later if needed
+        strategyNames = ["Trend-Following", "Signal-And-Trailing"]
+
+        # Create the variable to store user input from the dropdown regarding ticker names
+        # TODO: Somehow pass this variable to the smacro.py or signalAndTrailing.py files to
+        #       get the result when running a strategy
         tickerInput = tk.StringVar()
 
-        # Next, display the dropdown menu containing all ticker names
-        tickerDropdown = 
+        # Create the variable to store user input from the dropdown regarding strategies
+        # TODO: Somehow pass this variable to the smacro.py or signalAndTrailing.py files to
+        #       get the result when running a strategy
+        strategyInput = tk.StringVar()
+
+        # Display the dropdown menu containing all ticker names, change the color and place it on the grid
+        tickerDropdown = tk.OptionMenu(searchFrame, tickerInput, *tickerNames)
+        tickerDropdown.config(bg="lightblue", width=20)
+        tickerDropdown.grid(column=1, row=0)
+
+        # Display the dropdown menu containing all strategy names, change the color and place it on the grid
+        strategyDropdown = tk.OptionMenu(searchFrame, strategyInput, *strategyNames)
+        strategyDropdown.config(bg="gold", width=20)
+        strategyDropdown.grid(column=1, row=1)
+
+
+
 
         """# Create a frame for the Dispaly Stocks button
         displayStocksFrame = tk.Frame(self)
@@ -148,7 +179,18 @@ class DisplayClass(tk.Tk):
 
     def create_portfolio(self):
 
-        pass
+        # Create the portfolio frame beneath the stock data
+        portfolioFrame = tk.Frame(self)
+        portfolioFrame.grid(column=1, row=3)
+
+        # Create a button "My Portfolio" for accessing the portfolio
+        # TODO: Connect this button to another window when clicked
+        portfolioButton = tk.Button(portfolioFrame, text="My Portfolio")
+        portfolioButton.config(bg="lightgreen")
+
+        # pady=(top padding, bottom padding)
+        portfolioButton.grid(column=0, row=0, pady=(0, 60))
+
 
 if __name__ == "__main__":
 
