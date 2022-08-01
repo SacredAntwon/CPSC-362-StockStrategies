@@ -108,6 +108,7 @@ class DisplayClass(tk.Tk):
         # Within the frame, display a "Search" Button
         # TODO: Modify this search button to call a function to create a new window
         searchButton = tk.Button(searchFrame, text="Search")
+        searchButton.config(bg="lightgray")
         searchButton.grid(column=1, row=2, pady=10)
 
         # Create a list containing the ticker name information in the dropdown menu
