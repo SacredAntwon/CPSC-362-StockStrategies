@@ -106,8 +106,13 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
 
         data = self.getJSONData('DOW.json')
 
-        self.storeStockInfo(data)
+        if not self.fileExists("userStocks.json"):
+            if self.fileExists("userStrategies.json"):
+                os.remove("userStrategies.json")
+            self.storeStockInfo(data)
 
+        else:
+            self.dowJones = self.getJSONData("userStocks.json")
         #Check if the file exists
         # if not self.fileExists("userStocks.json"):
         #     # print("Getting stock information from yahoo!")

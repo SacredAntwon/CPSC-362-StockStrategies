@@ -1,4 +1,5 @@
 import stockinfo
+import json
 import pandas as pd
 from backtesting import Backtest, Strategy
 from backtesting.lib import crossover, SignalStrategy, TrailingStrategy
@@ -48,22 +49,40 @@ class SigTrailCross(SignalStrategy,
         # the method provided by `TrailingStrategy`
         self.set_trailing_sl(2)
 
-def selectStrategy(strat, ticker):
+def grabStrategyInfo(tickers, cash):
     obj = stockinfo.StockInfo()
-    stock = obj.getStockHistory(ticker)
-    money = 1000000
+    if not obj.fileExists("userStrategies.json"):
+        money = cash
+        stratDict = {}
+        for item in tickers:
+            stock = obj.getStockHistory(item)
+            statsSMA = Backtest(stock, SmaCross, cash=money, commission= 0, exclusive_orders=True)
+            statsSigTrail = Backtest(stock, SigTrailCross, cash=money, commission= 0, exclusive_orders=True)
+            statsSMA = statsSMA.run()
+            statsSigTrail = statsSigTrail.run()
+            #print(statsSMA)
+            stratDict[item] = {}
+            stratDict[item]["TF"] = obj.keepImportantInfo(statsSMA)
+            stratDict[item]["ST"] = obj.keepImportantInfo(statsSigTrail)
 
-    if strat == 'TF':
-        stats = Backtest(stock, SmaCross, cash=money, commission= 0, exclusive_orders=True)
-
-    elif strat == 'ST':
-        stats = Backtest(stock, SigTrailCross, cash=money, commission= 0, exclusive_orders=True)
-
+        with open("userStrategies.json", "w") as outfile:
+            json.dump(stratDict, outfile)
     else:
-        return False
+        stratDict = obj.getJSONData("userStrategies.json")
 
-    statInfo = stats.run()
-    return statInfo
+    #DONT NEED RETURN LATER SINCE WE ARE SAVING TO JSON
+    return stratDict
+    # if strat == 'TF':
+    #     stats = Backtest(stock, SmaCross, cash=money, commission= 0, exclusive_orders=True)
+    #
+    # elif strat == 'ST':
+    #     stats = Backtest(stock, SigTrailCross, cash=money, commission= 0, exclusive_orders=True)
+    #
+    # else:
+    #     return False
+    #
+    # statInfo = stats.run()
+    # return statInfo
 #bt.plot()
 #print(stats['Best Trade [%]'])
 

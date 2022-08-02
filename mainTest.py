@@ -15,7 +15,8 @@ print("Getting stock information from Yahoo Finance. Please wait a few seconds!"
 obj.readJSONFile()
 
 allStocks = obj.getStockNames()
-
+allStockStrategies = strategy.selectStrategy(allStocks)
+print(allStockStrategies["AAPL"]["ST"])
 # Display all stocks to choose from
 for name in allStocks:
     print(name)
@@ -57,8 +58,9 @@ while (userStock != 'exit'):
         print("\nNot A Valid Ticker!")
     else:
         print(obj.displayInfo(userStock))
+        print(allStockStrategies[userStock][userStrategy])
         #runBackTest(userStock)
-        print(strategy.selectStrategy(userStrategy, userStock))
+        #print(strategy.selectStrategy(userStrategy, userStock))
         #print(backt.movingAverage(userStock))
         #print(obj.getStockHistory(userStock))
         #stock = obj.getStockHistory(userStock)
