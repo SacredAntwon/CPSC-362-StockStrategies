@@ -15,8 +15,8 @@ print("Getting stock information from Yahoo Finance. Please wait a few seconds!"
 obj.readJSONFile()
 
 allStocks = obj.getStockNames()
-allStockStrategies = strategy.selectStrategy(allStocks)
-print(allStockStrategies["AAPL"]["ST"])
+allStockStrategies = strategy.grabStrategyInfo(allStocks, 1000000)
+print(allStockStrategies)
 # Display all stocks to choose from
 for name in allStocks:
     print(name)
