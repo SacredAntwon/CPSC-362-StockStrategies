@@ -25,8 +25,10 @@ class DisplayClass(tk.Tk):
         self.rowconfigure(1, weight=1)
         self.rowconfigure(2, weight=1)
 
-        # Save the dictionaries containing stock info and strategy info
+        # Save the object containing stock info
         self.sInfo = sinfo
+
+        # Save the dictionary containing strategy info
         self.stratDict = strat
 
         # Initialize the stockinfo object by getting stock info
@@ -46,12 +48,6 @@ class DisplayClass(tk.Tk):
         self.create_portfolio()
 
     def makeAPICalls(self):
-
-        # Create the object
-        #self.obj = stockinfo.StockInfo()
-
-        # Read from the JSON file
-        #self.obj.readJSONFile()
 
         # Store all relevant information in local variables within our class
         self.stockDict = self.sInfo.getAllStockInfo()
@@ -115,17 +111,18 @@ class DisplayClass(tk.Tk):
 
             print("Button pressed")
 
-            if tickerInput.get() == "" or strategyInput.get() == "":
-
-                print("Error! Please select both options!")
-
-            else:
+            if tickerInput.get() != "" and strategyInput.get() != "":
 
                 print("Tkiner selected: " + str(tickerInput.get()))
                 print("Strategy selected: " + str(strategyInput.get()))
 
-            # Open the new window
-            newWindow = tk.Toplevel(self)
+                # Check if a strategy is being used, in which case the banner will be the strategy type
+                if strategyInput.get() != "None":
+
+                    # Create a new page to display stock info
+                    self.display_info([tickerInput.get()], strategyInput.get(), strategyInput.get())
+
+
 
         # Within the frame, display a "Search" Button
         # TODO: Modify this search button to call a function to create a new window
@@ -138,7 +135,7 @@ class DisplayClass(tk.Tk):
 
         # Create a list containing the list of all strategy names
         # Note: This is hard coded, but can be changed later if needed
-        strategyNames = ["Trend-Following", "Signal-And-Trailing"]
+        strategyNames = ["None", "Trend-Following", "Signal-And-Trailing"]
 
         # Create the variable to store user input from the dropdown regarding ticker names
         # TODO: Somehow pass this variable to the smacro.py or signalAndTrailing.py files to
@@ -216,53 +213,62 @@ class DisplayClass(tk.Tk):
 
     # stockNames - A list of ticker(s)
     # dataToDisplay - One or more stocks to display
-    # isStrategy - (True) The data will be assumed to be in strategy-display format (Win-Loss Ratio, % Profitability, etc)
-    # isStrategy - (False) The data will be assumed to be in API-call format (Open, Close, etc)
-    def create_new_window(self, stockNames, dataToDisplay, isStrategy):
+    # strategyType - Either None (Open, Close, etc. will be displayed), Trend-Following Strategy or Signal-And-Trailing (Win/Loss Ratio, % Profitability, etc. will be displayed)
+    # window - The window to display the information in (by default is self, which is the main window)
+    # Note: This function displays stock information on a NEW WINDOW
+    def display_info(self, stockNameList, strategyType, banner="Info"):
 
         # Create a new window
         newWindow = tk.Toplevel(self)
 
         # Set the geometry of the new window
-        newWindow.geometry("500x500")
+        newWindow.geometry("800x800")
 
         # Configure the column(s)
         newWindow.columnconfigure(0, weight=1)
+        newWindow.columnconfigure(1, weight=1)
+        newWindow.columnconfigure(2, weight=1)
         
         # Configure the row(s)
         newWindow.rowconfigure(0, weight=1)
+        newWindow.rowconfigure(1, weight=1)
+        newWindow.rowconfigure(2, weight=1)
 
-        # These two variables will be declared as global in stockinfo.py
+        # Create a frame for our new window
+        newWindowFrame = tk.Frame(newWindow)
+        newWindowFrame.grid(column=1, row=1, sticky=tk.N)
 
-        obj = stockinfo.StockInfo()
-
-        obj.readJSONFile()
-
-        stockDict = obj.dowJones
-        stockData = obj.keys
+        # Create a bannner for our window
+        bannerLabel = tk.Label(newWindow, text=banner)
+        bannerLabel.config(font="Bold 18 bold")
+        bannerLabel.grid(column=1, row=0)
 
         # Display data on the window in strategy format
-        if isStrategy:
+        if strategyType != "None":
 
             # We need to display Annualized Return, Win/Loss Ratio, Max Drawdown, Annualized Volatility and the Sharpe Ratio
-            categories = ["Annualized Return", "Win/Loss Ratio", "Max Drawdown", "Annualized Volatility", "Sharpe Ratio"]
+            categories = ["Stock", "Annualized Return", "% Profitability", "Win/Loss Ratio", "Max Drawdown", "Annualized Volatility", "Sharpe Ratio"]
 
+            # These are the technical names of the categories, which are used to index the dictionary
+            categoriesOfficial = ["annualReturn", "profitFactor", "winRate", "maxDrawdown", "annualVolatility", "sharpeRatio"]
+
+            # Output the different category names
             for index in range(len(categories)):
 
                 # Create each category inside the stockInfo frame
-                stockCategory = tk.Label(newWindow, text=categories[index])
+                stockCategory = tk.Label(newWindowFrame, text=categories[index])
                 stockCategory.grid(column=index, row=0)
 
-                # Add here the displays for each stock retrieved from the API call
-                for i in range(len(stockNames)):
+            # Output the displays for each stock retrieved from the API call
+            for i in range(len(stockNameList)):
 
-                    stockName = tk.Label(newWindow, text=stockNames[i], highlightcolor="blue", highlightthickness=4)
-                    stockName.grid(column=0, row=i+1)
+                stockName = tk.Label(newWindowFrame, text=stockNameList[i], highlightcolor="blue", highlightthickness=4)
+                stockName.grid(column=0, row=i+1)
 
-                    for j in range(len(stockData)):
+                for j in range(len(categoriesOfficial)):
 
-                        stockCategory = tk.Label(stockInfo, text=stockDict[stockNames[i]][stockData[j]])
-                        stockCategory.grid(column=j+1, row=i+1)
+                    stockCategory = tk.Label(newWindowFrame, text=self.stratDict[stockNameList[i]][strategyType][categoriesOfficial[j]])
+                    stockCategory.grid(column=j+1, row=i+1)
 
 
 

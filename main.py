@@ -17,6 +17,7 @@ if __name__ == '__main__':
     print("Running all strategies...")
 
     strat = strategy.grabStrategyInfo(sinfo.getStockNames(), 1000000)
+    #print(strat)
 
     print("Running the display!")
 
