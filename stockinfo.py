@@ -95,6 +95,10 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
 
         return self.dowJones
 
+    def getKeys(self) -> list:
+
+        return self.keys
+
     # Gets all the stock tickers from the dictionary
     def getStockNames(self) -> list:
 
@@ -113,6 +117,7 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
 
         else:
             self.dowJones = self.getJSONData("userStocks.json")
+
         #Check if the file exists
         # if not self.fileExists("userStocks.json"):
         #     # print("Getting stock information from yahoo!")

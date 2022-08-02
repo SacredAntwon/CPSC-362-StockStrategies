@@ -62,8 +62,8 @@ def grabStrategyInfo(tickers, cash):
             statsSigTrail = statsSigTrail.run()
             #print(statsSMA)
             stratDict[item] = {}
-            stratDict[item]["TF"] = obj.keepImportantInfo(statsSMA)
-            stratDict[item]["ST"] = obj.keepImportantInfo(statsSigTrail)
+            stratDict[item]["Trend-Following"] = obj.keepImportantInfo(statsSMA)
+            stratDict[item]["Signal-And-Trailing"] = obj.keepImportantInfo(statsSigTrail)
 
         with open("userStrategies.json", "w") as outfile:
             json.dump(stratDict, outfile)

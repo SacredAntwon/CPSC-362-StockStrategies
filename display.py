@@ -6,7 +6,9 @@ import stockinfo
 class DisplayClass(tk.Tk):
 
     # This initializer places all widgets within their corresponding frame
-    def __init__(self):
+    # sinfo - An object containing all stock info
+    # strat - A dictionary of all stock testing info (Win/Loss Ratio, % Profitability, etc)
+    def __init__(self, sinfo, strat):
         super().__init__()
 
         #self.geometry("240x100")
@@ -22,6 +24,10 @@ class DisplayClass(tk.Tk):
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
         self.rowconfigure(2, weight=1)
+
+        # Save the dictionaries containing stock info and strategy info
+        self.sInfo = sinfo
+        self.stratDict = strat
 
         # Initialize the stockinfo object by getting stock info
         # TODO: Remove the makeAPICalls() function and pass the info to __init__() from main.py
@@ -42,15 +48,15 @@ class DisplayClass(tk.Tk):
     def makeAPICalls(self):
 
         # Create the object
-        self.obj = stockinfo.StockInfo()
+        #self.obj = stockinfo.StockInfo()
 
         # Read from the JSON file
-        self.obj.readJSONFile()
+        #self.obj.readJSONFile()
 
         # Store all relevant information in local variables within our class
-        self.stockDict = self.obj.dowJones
-        self.stockData = self.obj.keys
-        self.stockNames = self.obj.getStockNames()
+        self.stockDict = self.sInfo.getAllStockInfo()
+        self.stockData = self.sInfo.getKeys()
+        self.stockNames = self.sInfo.getStockNames()
 
     # This function creates the widgets for all stock info
     def create_display_stock_info(self):
@@ -59,13 +65,13 @@ class DisplayClass(tk.Tk):
 
         # These two variables will be declared as global in stockinfo.py
 
-        obj = stockinfo.StockInfo()
+        #obj = stockinfo.StockInfo()
 
-        obj.readJSONFile()
+        #obj.readJSONFile()
 
-        stockDict = obj.dowJones
-        stockData = obj.keys
-        stockNames = obj.getStockNames()
+        #stockDict = obj.dowJones
+        #stockData = obj.keys
+        #stockNames = obj.getStockNames()
 
         # Create the underlying frame that holds all stock information
         stockInfo = tk.Frame(self)
@@ -80,14 +86,14 @@ class DisplayClass(tk.Tk):
             stockCategory.grid(column=index, row=0)
 
         # Add here the displays for each stock retrieved from the API call
-        for i in range(len(stockNames)):
+        for i in range(len(self.stockNames)):
 
-            stockName = tk.Label(stockInfo, text=stockNames[i], highlightcolor="blue", highlightthickness=4)
+            stockName = tk.Label(stockInfo, text=self.stockNames[i], highlightcolor="blue", highlightthickness=4)
             stockName.grid(column=0, row=i+1)
 
-            for j in range(len(stockData)):
+            for j in range(len(self.stockData)):
 
-                stockCategory = tk.Label(stockInfo, text=stockDict[stockNames[i]][stockData[j]])
+                stockCategory = tk.Label(stockInfo, text=self.stockDict[self.stockNames[i]][self.stockData[j]])
                 stockCategory.grid(column=j+1, row=i+1)
 
     # This function is used to create the search mechanics, including the ticker dropdown, strategy dropdown and search button
@@ -105,9 +111,25 @@ class DisplayClass(tk.Tk):
         strategyLabel = tk.Label(searchFrame, text="Strategy: ", font="BOLD")
         strategyLabel.grid(column=0, row=1)
 
+        def searchButtonEvent():
+
+            print("Button pressed")
+
+            if tickerInput.get() == "" or strategyInput.get() == "":
+
+                print("Error! Please select both options!")
+
+            else:
+
+                print("Tkiner selected: " + str(tickerInput.get()))
+                print("Strategy selected: " + str(strategyInput.get()))
+
+            # Open the new window
+            newWindow = tk.Toplevel(self)
+
         # Within the frame, display a "Search" Button
         # TODO: Modify this search button to call a function to create a new window
-        searchButton = tk.Button(searchFrame, text="Search")
+        searchButton = tk.Button(searchFrame, text="Search", command=searchButtonEvent)
         searchButton.config(bg="lightgray")
         searchButton.grid(column=1, row=2, pady=10)
 

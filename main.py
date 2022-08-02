@@ -9,7 +9,17 @@ from backtesting import Backtest, Strategy
 #meanr = meanrev.MeanReversion()
 
 if __name__ == '__main__':
-    obj = stockinfo.StockInfo()
-    obj.readJSONFile()
-    strategy.grabStrategyInfo(obj.getStockNames(), 1000000)
-    display.DisplayClass()
+
+    print("Getting stock information...")
+    sinfo = stockinfo.StockInfo()
+    sinfo.readJSONFile()
+
+    print("Running all strategies...")
+
+    strat = strategy.grabStrategyInfo(sinfo.getStockNames(), 1000000)
+
+    print("Running the display!")
+
+    # Run the display
+    gui = display.DisplayClass(sinfo, strat)
+    gui.mainloop()
