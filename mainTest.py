@@ -5,7 +5,7 @@ from backtesting import Backtest, Strategy
 
 # Call the functions
 #meanr = meanrev.MeanReversion()
-
+#print(stockinfo.getHistoricalData("AAPL"))
 obj = stockinfo.StockInfo()
 #backt = backtest.SMAcross()
 

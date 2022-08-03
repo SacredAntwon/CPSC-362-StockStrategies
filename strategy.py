@@ -55,7 +55,7 @@ def grabStrategyInfo(tickers, cash):
         money = cash
         stratDict = {}
         for item in tickers:
-            stock = obj.getStockHistory(item)
+            stock = obj.getStockHistoryYF(item)
             statsSMA = Backtest(stock, SmaCross, cash=money, commission= 0, exclusive_orders=True)
             statsSigTrail = Backtest(stock, SigTrailCross, cash=money, commission= 0, exclusive_orders=True)
             statsSMA = statsSMA.run()
@@ -65,8 +65,9 @@ def grabStrategyInfo(tickers, cash):
             stratDict[item]["Trend-Following"] = obj.keepImportantInfo(statsSMA)
             stratDict[item]["Signal-And-Trailing"] = obj.keepImportantInfo(statsSigTrail)
 
-        with open("userStrategies.json", "w") as outfile:
-            json.dump(stratDict, outfile)
+        obj.jsonFileDump("userStrategies.json", stratDict)
+        # with open("userStrategies.json", "w") as outfile:
+        #     json.dump(stratDict, outfile)
     else:
         stratDict = obj.getJSONData("userStrategies.json")
 

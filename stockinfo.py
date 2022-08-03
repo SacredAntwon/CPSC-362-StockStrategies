@@ -5,8 +5,28 @@ import time
 import datetime
 import pandas as pd
 from requests.exceptions import Timeout
+import yfinance as yf
 
 # FINISHED API DEMO AND PASSED AT July 19th 8:01 PM
+class HistoricalDataAdapter():
+    def __init__(self, **adapted_method):
+        self.__dict__.update(adapted_method)
+
+def getHistoricalData(ticker, data_source="API"):
+    if data_source == "API":
+        print(ticker)
+        hd = StockInfo().getStockHistoryAPI(ticker)
+    elif data_source == "Yahoo":
+        hd = StockInfo().getStockHistoryYF(ticker)
+
+    #historical_data = StockInfo().keepImportantInfo(hd)
+    #print(historical_data)
+    data_adapter = HistoricalDataAdapter(historical_data = hd.getHistoricalData)
+    print(data_adapter)
+    hdata = data_adapter.historical_data()
+
+    return hdata
+
 class StockInfo:
 
     # Initializer
@@ -23,6 +43,9 @@ class StockInfo:
     # Methods
 
     # -------------------------------------------------------------------
+
+
+
     def keepImportantInfo(self, stats):
         statDict = {'annualReturn': stats['Return (Ann.) [%]'],
                     'profitFactor': stats['Profit Factor'],
@@ -33,7 +56,7 @@ class StockInfo:
 
         return statDict
 
-    def getStockHistory(self, ticker):
+    def getStockHistoryAPI(self, ticker):
         #Year, Month, Day, Hour, Minute
         period1 = int(time.mktime(datetime.datetime(2010, 1, 1, 23, 59).timetuple()))
         period2 = int(time.mktime(datetime.datetime(2025, 12, 30, 23, 59).timetuple()))
@@ -50,6 +73,11 @@ class StockInfo:
         # df.to_csv('out.csv')
         return df
     # Checks if a file exists
+
+    def getStockHistoryYF(self, ticker):
+        hist = yf.Ticker(ticker).history(period="max")
+        return hist
+
     def fileExists(self, file: str) -> bool:
 
         # Check if the file exists
@@ -79,6 +107,7 @@ currentStockInfo['ask'], currentStockInfo['regularMarketVolume'], currentStockIn
 currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRating']))
 
     # This function will check if there is a valid key.
+    # DECORATOR
     def findInfo(self, currentStock, key):
         if key in currentStock:
             return currentStock[key]
@@ -134,6 +163,10 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
         #         self.dowJones = json.load(openfile)
 
     # Grab and store stock infromation
+    def jsonFileDump(self, fileName, data):
+        with open(fileName, "w") as outfile:
+            json.dump(data, outfile)
+
     def storeStockInfo(self, data: dict) -> bool:
 
         listOfStocks = data['DOW']
@@ -170,8 +203,9 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
 
             self.dowJones[stock] = stockInfo
 
-        with open("userStocks.json", "w") as outfile:
-            json.dump(self.dowJones, outfile)
+        self.jsonFileDump("userStocks.json", self.getAllStockInfo())
+        # with open("userStocks.json", "w") as outfile:
+        #     json.dump(self.dowJones, outfile)
 
         return True
 
