@@ -225,7 +225,7 @@ class DisplayClass(tk.Tk):
         newWindow.columnconfigure(0, weight=1)
         newWindow.columnconfigure(1, weight=1)
         newWindow.columnconfigure(2, weight=1)
-        
+
         # Configure the row(s)
         newWindow.rowconfigure(0, weight=1)
         newWindow.rowconfigure(1, weight=4)

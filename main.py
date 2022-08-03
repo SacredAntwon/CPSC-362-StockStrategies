@@ -3,10 +3,9 @@ import backtest
 import strategy
 import display
 from backtesting import Backtest, Strategy
-#import smacro
-#import meanrev
+
 # Call the functions
-#meanr = meanrev.MeanReversion()
+
 
 if __name__ == '__main__':
 

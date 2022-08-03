@@ -5,8 +5,6 @@ from backtesting import Backtest, Strategy
 from backtesting.lib import crossover, SignalStrategy, TrailingStrategy
 from backtesting.test import SMA
 
-#obj = stockinfo.StockInfo()
-
 class SmaCross(Strategy):
     def init(self):
         price = self.data.Close
@@ -60,42 +58,14 @@ def grabStrategyInfo(tickers, cash):
             statsSigTrail = Backtest(stock, SigTrailCross, cash=money, commission= 0, exclusive_orders=True)
             statsSMA = statsSMA.run()
             statsSigTrail = statsSigTrail.run()
-            #print(statsSMA)
+
             stratDict[item] = {}
             stratDict[item]["Trend-Following"] = obj.keepImportantInfo(statsSMA)
             stratDict[item]["Signal-And-Trailing"] = obj.keepImportantInfo(statsSigTrail)
 
         obj.jsonFileDump("userStrategies.json", stratDict)
-        # with open("userStrategies.json", "w") as outfile:
-        #     json.dump(stratDict, outfile)
+
     else:
         stratDict = obj.getJSONData("userStrategies.json")
 
-    #DONT NEED RETURN LATER SINCE WE ARE SAVING TO JSON
     return stratDict
-    # if strat == 'TF':
-    #     stats = Backtest(stock, SmaCross, cash=money, commission= 0, exclusive_orders=True)
-    #
-    # elif strat == 'ST':
-    #     stats = Backtest(stock, SigTrailCross, cash=money, commission= 0, exclusive_orders=True)
-    #
-    # else:
-    #     return False
-    #
-    # statInfo = stats.run()
-    # return statInfo
-#bt.plot()
-#print(stats['Best Trade [%]'])
-
-
-# class BackTest:
-#     def __init__(self):
-#         pass
-#
-#     def movingAverage(self, ticker):
-#         stockHistory = obj.getStockHistory(ticker)
-#         stockHistory = stockHistory[["Adj Close"]]
-#         stockHistory.rename(columns={"Adj Close":"Price"}, inplace=True)
-#         stockHistory = stockHistory.iloc[1:]
-#         stockHistory["100MA"] = stockHistory["Price"].rolling(window=100).mean()
-#         return stockHistory
