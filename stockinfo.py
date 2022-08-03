@@ -12,31 +12,34 @@ class HistoricalDataAdapter():
     def __init__(self, **adapted_method):
         self.__dict__.update(adapted_method)
 
-def getHistoricalData(ticker, data_source="Yahoo"):
+def getHistoricalData(ticker, data_source="API"):
     if data_source == "API":
-        print(ticker)
-        hd = StockInfoAPI().getStockHistory(ticker)
-        print(hd)
+        #print(ticker)
+        hd = StockInfoAPI(ticker)
+        #print(hd)
     elif data_source == "Yahoo":
-        hd = StockInfoYF().getStockHistory(ticker)
-        print(hd)
+        hd = StockInfoYF(ticker)
+        #print(hd)
 
     #historical_data = StockInfo().keepImportantInfo(hd)
     #print(historical_data)
     data_adapter = HistoricalDataAdapter(historical_data = hd.getStockHistory)
-    print(data_adapter)
+    #print(data_adapter)
     hdata = data_adapter.historical_data()
 
     return hdata
 
 class StockInfoAPI():
-    def getStockHistory(self, ticker):
+    def __init__(self, ticker):
+        self.ticker = ticker
+
+    def getStockHistory(self):
         #Year, Month, Day, Hour, Minute
-        period1 = int(time.mktime(datetime.datetime(2010, 1, 1, 23, 59).timetuple()))
+        period1 = int(time.mktime(datetime.datetime(1980, 1, 1, 23, 59).timetuple()))
         period2 = int(time.mktime(datetime.datetime(2025, 12, 30, 23, 59).timetuple()))
         interval = '1d' # 1d, 1m, 1wk
 
-        query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={period1}&period2={period2}&interval={interval}&events=history&includeAdjustedClose=true'
+        query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{self.ticker}?period1={period1}&period2={period2}&interval={interval}&events=history&includeAdjustedClose=true'
 
         df = pd.read_csv(query_string, index_col='Date', parse_dates=True)
         #df = pd.read_csv(query_string)
@@ -48,8 +51,11 @@ class StockInfoAPI():
         return df
 
 class StockInfoYF():
-    def getStockHistory(self, ticker):
-        hist = yf.Ticker(ticker).history(period="max")
+    def __init__(self, ticker):
+        self.ticker = ticker
+
+    def getStockHistory(self):
+        hist = yf.Ticker(self.ticker).history(period="max")
 
         return hist
 

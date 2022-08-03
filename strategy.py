@@ -55,7 +55,7 @@ def grabStrategyInfo(tickers, cash):
         money = cash
         stratDict = {}
         for item in tickers:
-            stock = obj.getStockHistoryYF(item)
+            stock = stockinfo.getHistoricalData(item)
             statsSMA = Backtest(stock, SmaCross, cash=money, commission= 0, exclusive_orders=True)
             statsSigTrail = Backtest(stock, SigTrailCross, cash=money, commission= 0, exclusive_orders=True)
             statsSMA = statsSMA.run()

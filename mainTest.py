@@ -5,7 +5,7 @@ from backtesting import Backtest, Strategy
 
 # Call the functions
 #meanr = meanrev.MeanReversion()
-print(stockinfo.getHistoricalData("AAPL"))
+#print(stockinfo.getHistoricalData("AAPL"))
 obj = stockinfo.StockInfo()
 #backt = backtest.SMAcross()
 
@@ -16,7 +16,7 @@ obj.readJSONFile()
 
 allStocks = obj.getStockNames()
 allStockStrategies = strategy.grabStrategyInfo(allStocks, 1000000)
-print(allStockStrategies)
+#print(allStockStrategies)
 # Display all stocks to choose from
 for name in allStocks:
     print(name)
@@ -59,6 +59,7 @@ while (userStock != 'exit'):
     else:
         print(obj.displayInfo(userStock))
         print(allStockStrategies[userStock][userStrategy])
+
         #runBackTest(userStock)
         #print(strategy.selectStrategy(userStrategy, userStock))
         #print(backt.movingAverage(userStock))
