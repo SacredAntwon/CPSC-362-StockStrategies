@@ -26,7 +26,7 @@ def getHistoricalData(ticker, data_source="API"):
     data_adapter = HistoricalDataAdapter(historical_data = hd.getStockHistory)
     #print(data_adapter)
     hdata = data_adapter.historical_data()
-
+    
     return hdata
 
 class StockInfoAPI():

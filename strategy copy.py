@@ -17,18 +17,6 @@ class SmaCross(Strategy):
         elif crossover(self.ma2, self.ma1):
             self.sell()
 
-class SmaCross2(Strategy):
-    def init(self):
-        self.price = self.data.Close
-        self.ma1 = self.I(SMA, self.price, 50)
-        self.ma2 = self.I(SMA, self.price, 100)
-
-    def next(self):
-        if crossover(self.price, self.ma1):
-            self.buy()
-        elif crossover(self.price, self.ma2):
-            self.sell()
-
 class SigTrailCross(SignalStrategy,
                TrailingStrategy):
     n1 = 10
@@ -67,7 +55,7 @@ def grabStrategyInfo(tickers, cash):
         for item in tickers:
             stock = stockinfo.getHistoricalData(item)
             statsSMA = Backtest(stock, SmaCross, cash=money, commission= 0, exclusive_orders=True)
-            statsSigTrail = Backtest(stock, SmaCross2, cash=money, commission= 0, exclusive_orders=True)
+            statsSigTrail = Backtest(stock, SigTrailCross, cash=money, commission= 0, exclusive_orders=True)
             statsSMA = statsSMA.run()
             statsSigTrail = statsSigTrail.run()
 
