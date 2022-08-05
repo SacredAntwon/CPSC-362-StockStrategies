@@ -200,9 +200,16 @@ class DisplayClass(tk.Tk):
         portfolioFrame = tk.Frame(self)
         portfolioFrame.grid(column=1, row=3)
 
+        def displayPortfolio():
+
+            print("Button pressed")
+
+            # Create a new page to display stock info
+            self.display_info([], strategyInput.get(), strategyInput.get())
+
         # Create a button "My Portfolio" for accessing the portfolio
         # TODO: Connect this button to another window when clicked
-        portfolioButton = tk.Button(portfolioFrame, text="My Portfolio")
+        portfolioButton = tk.Button(portfolioFrame, text="My Portfolio", command=displayPortfolio)
         portfolioButton.config(bg="lightgreen")
 
         # pady=(top padding, bottom padding)
