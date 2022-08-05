@@ -150,17 +150,17 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
             self.dowJones = self.getJSONData("userStocks.json")
 
     # Store info into portfolio json
-    def portfolioInfo(self, todo, ticker):
+    def portfolioInfo(self, todo, ticker, strat):
         data = self.getJSONData('portfolio.json')
-
+        item = [ticker, strat]
         print(data)
         if (todo == "Add"):
-            if ticker not in data['portfolio']:
-                data['portfolio'].append(ticker)
+            if item not in data['portfolio']:
+                data['portfolio'].append(item)
 
         elif (todo == "Remove"):
-            if ticker in data['portfolio']:
-                data['portfolio'].remove(ticker)
+            if item in data['portfolio']:
+                data['portfolio'].remove(item)
 
         self.jsonFileDump("portfolio.json", data)
 
