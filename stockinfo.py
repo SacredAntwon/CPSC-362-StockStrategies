@@ -26,7 +26,7 @@ def getHistoricalData(ticker, data_source="API"):
     data_adapter = HistoricalDataAdapter(historical_data = hd.getStockHistory)
     #print(data_adapter)
     hdata = data_adapter.historical_data()
-    
+
     return hdata
 
 class StockInfoAPI():
@@ -162,6 +162,20 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
         else:
             self.dowJones = self.getJSONData("userStocks.json")
 
+    def portfolioInfo(self, todo, ticker):
+        #self.jsonFileDump("portfolio.json", {})
+        data = self.getJSONData('portfolio.json')
+        
+        print(data)
+        if (todo == "Add"):
+            if ticker not in data['portfolio']:
+                data['portfolio'].append(ticker)
+
+        elif (todo == "Remove"):
+            if ticker in data['portfolio']:
+                data['portfolio'].remove(ticker)
+
+        self.jsonFileDump("portfolio.json", data)
         #Check if the file exists
         # if not self.fileExists("userStocks.json"):
         #     # print("Getting stock information from yahoo!")

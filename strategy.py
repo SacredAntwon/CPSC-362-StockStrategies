@@ -5,11 +5,14 @@ from backtesting import Backtest, Strategy
 from backtesting.lib import crossover, SignalStrategy, TrailingStrategy
 from backtesting.test import SMA
 
-class InterfaceSMACross(Strategy):
-    def init(self):
-        pass
+# class InterfaceSMACross(Strategy):
+#     def init(self):
+#         pass
+#
+#     def next(self):
+#         pass
 
-class SmaCross(InterfaceSMACross):
+class SmaCross(Strategy):
     def init(self):
         price = self.data.Close
         self.ma1 = self.I(SMA, price, 50)
@@ -21,7 +24,7 @@ class SmaCross(InterfaceSMACross):
         elif crossover(self.ma2, self.ma1):
             self.sell()
 
-class SmaCross2(InterfaceSMACross):
+class SmaCross2(Strategy):
     def init(self):
         self.price = self.data.Close
         self.ma1 = self.I(SMA, self.price, 50)
@@ -70,18 +73,21 @@ def grabStrategyInfo(tickers, cash):
         stratDict = {}
         for item in tickers:
             stock = stockinfo.getHistoricalData(item)
-            interface = InterfaceSMACross()
-            interface2 = InterfaceSMACross()
+            # interface = InterfaceSMACross()
+            # interface2 = InterfaceSMACross()
             statsSMA = Backtest(stock, SmaCross, cash=money, commission= 0, exclusive_orders=True)
             statsSMA2 = Backtest(stock, SmaCross2, cash=money, commission= 0, exclusive_orders=True)
-            interface = statsSMA
-            interface2 = statsSMA2
-            interface = interface.run()
-            interface2 = interface2.run()
+            # interface = statsSMA
+            # interface2 = statsSMA2
+            # interface = interface.run()
+            # interface2 = interface2.run()
+
+            statsSMA = statsSMA.run()
+            statsSMA2 = statsSMA2.run()
 
             stratDict[item] = {}
-            stratDict[item]["Trend-Following"] = obj.keepImportantInfo(interface)
-            stratDict[item]["Signal-And-Trailing"] = obj.keepImportantInfo(interface2)
+            stratDict[item]["Trend-Following"] = obj.keepImportantInfo(statsSMA)
+            stratDict[item]["Signal-And-Trailing"] = obj.keepImportantInfo(statsSMA2)
 
         obj.jsonFileDump("userStrategies.json", stratDict)
 

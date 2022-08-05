@@ -5,9 +5,11 @@ from backtesting import Backtest, Strategy
 
 # Call the functions
 #meanr = meanrev.MeanReversion()
-print(stockinfo.getHistoricalData("AAPL"))
 obj = stockinfo.StockInfo()
 #backt = backtest.SMAcross()
+
+obj.portfolioInfo("Add", "CLAY")
+#obj.portfolioInfo("Add", info, "SET")
 
 #bt = Backtest(obj.getStockHistory('IBM'), backt, cash=100000, commission = 0.002, exclusive_orders=True)
 print("Getting stock information from Yahoo Finance. Please wait a few seconds!")
