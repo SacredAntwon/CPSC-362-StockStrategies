@@ -205,8 +205,23 @@ class DisplayClass(tk.Tk):
 
             print("Portfolio button pressed!")
 
-            # Display the entire portfolio
-            self.display_info(self.sInfo.getJSONData("portfolio.json")["portfolio"], False)
+            try:
+
+                data = self.sInfo.getJSONData("portfolio.json")["portfolio"]
+
+                if data == []:
+
+                    print("Your portfolio is empty!")
+
+                else:
+
+                    # Display the entire portfolio
+                    self.display_info(data, False)
+
+            except:
+
+                print("Error! Unable to retrieve data from the portfolio!")
+                
 
         # Create a button "My Portfolio" for accessing the portfolio
         # TODO: Connect this button to another window when clicked

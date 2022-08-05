@@ -155,7 +155,7 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
         # Check if the portfolio file exists
         if not self.fileExists("portfolio.json"):
 
-            if not self.createFile("portfolio.json"):
+            if not self.createEmptyJSONFile("portfolio.json"):
 
                 print("Error! Unable to create portfolio.json!")
                 return False
@@ -170,7 +170,7 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
             data = self.getJSONData('portfolio.json')
 
         item = [ticker, strat]
-        
+
         if (todo == "Add"):
             if item not in data['portfolio']:
                 data['portfolio'].append(item)
@@ -183,7 +183,7 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
 
         print(data)
 
-    def createFile(self, fileName):
+    def createEmptyJSONFile(self, fileName):
 
         try:
             
