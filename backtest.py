@@ -217,52 +217,6 @@ class Backtest:
                 stockIsAbove = False
 
 
-
-            """# Check if the intersection occurred
-            if didIntersect:
-
-                # Check if the stock price is above the stategic line
-                if self.priceList[i + 100 - 1] > linePrices[i]:
-
-                    # If buyStockPriceAbove is true, then we buy
-                    if buyStockPriceAbove:
-
-                        # Append the price at the line to our intersection array
-                        self.buySellPrices.append(linePrices[i])
-
-                    # This means we sell
-                    else:
-
-                        # Append the NEGATIVE price at the line to our intersection array
-                        self.buySellPrices.append(-linePrices[i])
-
-                    # Reset the status of the intersection flag
-                    didIntersect = False
-
-                # This means the stock price is below the strategic line
-                elif self.priceList[i + 100 - 1] < linePrices[i]:
-
-                    # If buyStockPriceAbove is true, then we sell
-                    if buyStockPriceAbove:
-
-                        # Append the NEGATIVE price at the line to our intersection array
-                        self.buySellPrices.append(-linePrices[i])
-
-                    # This means we sell
-                    else:
-
-                        # Append the price at the line to our intersection array
-                        self.buySellPrices.append(linePrices[i])
-
-                    # Reset the status of the intersection flag
-                    didIntersect = False
-
-            print("Comparing", round(linePrices[i], 1), "and", round(self.priceList[i + 100 - 1], 1), "...")
-            if round(linePrices[i], 1) == round(self.priceList[i + 100 - 1], 1):
-
-                # Mark the intersection for later
-                didIntersect = True"""
-
         # self.intersectLine is now complete and ready to be used
 
     def UpdatePrices(self, newPriceList):
