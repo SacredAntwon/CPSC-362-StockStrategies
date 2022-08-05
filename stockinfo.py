@@ -151,9 +151,26 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
 
     # Store info into portfolio json
     def portfolioInfo(self, todo, ticker, strat):
-        data = self.getJSONData('portfolio.json')
+
+        # Check if the portfolio file exists
+        if not self.fileExists("portfolio.json"):
+
+            if not self.createFile("portfolio.json"):
+
+                print("Error! Unable to create portfolio.json!")
+                return False
+
+            else:
+
+                # Data only contains the portfolio
+                data = {'portfolio': []}
+
+        else:
+
+            data = self.getJSONData('portfolio.json')
+
         item = [ticker, strat]
-        print(data)
+        
         if (todo == "Add"):
             if item not in data['portfolio']:
                 data['portfolio'].append(item)
@@ -163,6 +180,20 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
                 data['portfolio'].remove(item)
 
         self.jsonFileDump("portfolio.json", data)
+
+        print(data)
+
+    def createFile(self, fileName):
+
+        try:
+            
+            open(fileName, "x")
+
+            return True
+
+        except:
+
+            return False
 
     # Grab and store stock infromation
     def jsonFileDump(self, fileName, data):
@@ -209,5 +240,61 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
         self.jsonFileDump("userStocks.json", self.getAllStockInfo())
 
         return True
+
+    # This function separates the strategy from the ticker
+    def separateStrategies(self, ticker_strategy):
+
+        # TODO: Find a way to make this function return an array of all strategies AND the number
+        #       of tickers belonging to each strategy (probably using a multi-dimensional array)
+
+        # This is the list that stores each strategy in ticker_strategy
+        strategyList = []
+
+        # The list of tickers for each corresponding strategy
+        tickerList = []
+
+        # Whether or not the strategy was found in the strategyList
+        strategyWasFound = False
+
+        # Iterate through every ticker sub-array in ticker_strategy
+        for i in range(len(ticker_strategy)):
+
+            for j in range(len(strategyList)):
+
+                if ticker_strategy[i][1] == strategyList[j]:
+
+                    # We found the strategy
+                    strategyWasFound = True
+
+                    # At index j, append the new ticker
+                    tickerList[j].append(ticker_strategy[i][0])
+            
+            # Check if the strategy wasn't found
+            if not strategyWasFound:
+
+                # Append the new strategy to the strategyList
+                strategyList.append(ticker_strategy[i][1])
+
+                # Append the first ticker (inside a list) to the tickerList
+                tickerList.append([ticker_strategy[i][0]])
+
+            # Reset the strategyWasFound flag
+            strategyWasFound = False
+
+            """# Check if the strategy associated with the stock isn't registered in strategyList
+            if ticker_strategy[i][1] not in strategyList:
+
+                # Append the strategy to the strategy list
+                strategyList.append(ticker_strategy[i][1])
+
+                # Append the ticker to the ticker list
+                tickerList.append([ticker_strategy[i][0]])
+
+            # This means the strategy already exists in our strategy list, so we need to find it
+            else:"""
+
+            
+        # Return the tickerList (a multi-dimensional array) and strategyList (an array)
+        return tickerList, strategyList
 
     # -------------------------------------------------------------------

@@ -7,7 +7,8 @@ from backtesting import Backtest, Strategy
 obj = stockinfo.StockInfo()
 
 
-obj.portfolioInfo("Remove", "CLAY", "PriceSMA")
+obj.portfolioInfo("Add", "AAPL", "Trend-Following")
+exit()
 
 print("Getting stock information from Yahoo Finance. Please wait a few seconds!")
 

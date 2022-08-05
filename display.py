@@ -117,8 +117,8 @@ class DisplayClass(tk.Tk):
                 print("Strategy selected: " + str(strategyInput.get()))
 
                 # Create a new page to display stock info
-                self.display_info([tickerInput.get()], strategyInput.get(), strategyInput.get())
-
+                #self.display_info([tickerInput.get()], strategyInput.get(), strategyInput.get())
+                self.display_info([[tickerInput.get(), strategyInput.get()]])
 
 
         # Within the frame, display a "Search" Button
@@ -200,12 +200,13 @@ class DisplayClass(tk.Tk):
         portfolioFrame = tk.Frame(self)
         portfolioFrame.grid(column=1, row=3)
 
+        # TODO: Fix this function to where it displays the portfolio
         def displayPortfolio():
 
-            print("Button pressed")
+            print("Portfolio button pressed!")
 
-            # Create a new page to display stock info
-            self.display_info([], strategyInput.get(), strategyInput.get())
+            # Display the entire portfolio
+            self.display_info(self.sInfo.getJSONData("portfolio.json")["portfolio"], False)
 
         # Create a button "My Portfolio" for accessing the portfolio
         # TODO: Connect this button to another window when clicked
@@ -215,12 +216,186 @@ class DisplayClass(tk.Tk):
         # pady=(top padding, bottom padding)
         portfolioButton.grid(column=0, row=0, pady=(0, 60))
 
-    # stockNames - A list of ticker(s)
-    # dataToDisplay - One or more stocks to display
-    # strategyType - Either None (Open, Close, etc. will be displayed), Trend-Following Strategy or Signal-And-Trailing (Win/Loss Ratio, % Profitability, etc. will be displayed)
-    # window - The window to display the information in (by default is self, which is the main window)
+    """def separateStrategies(self, ticker_strategy):
+
+        # This is the list that stores each strategy in ticker_strategy
+        strategyList = []
+
+        # Iterate through every ticker sub-array in ticker_strategy
+        for stockData in ticker_strategy:
+
+            # Check if the strategy associated with the stock isn't registered in strategyList
+            if stockData[1] not in strategyList:
+
+                # Append the strategy to the list
+                strategyList.append(stockData[1])
+
+        return strategyList"""
+
+
+    # ticker_strategy - A multi-dimensional array for corresponding each stock with its strategy
+    # portfolioButton - (True) Adds a "Add to Portfolio" button on the new window
+    #                   (False) Has no "Add to Portfolio" button on the new window
     # Note: This function displays stock information on a NEW WINDOW
-    def display_info(self, stockNameList, strategyType, banner="Info"):
+    def display_info(self, ticker_strategy, portfolioAddButton = True):
+
+        # Create a new window
+        newWindow = tk.Toplevel(self)
+
+        # Set the geometry of the new window
+        newWindow.geometry("800x800")
+
+        # We need to display Annualized Return, Win/Loss Ratio, Max Drawdown, Annualized Volatility and the Sharpe Ratio
+        categories = ["Stock", "Annualized Return", "% Profitability", "Win/Loss Ratio", "Max Drawdown", "Annualized Volatility", "Sharpe Ratio"]
+
+        # These are the technical names of the categories, which are used to index the dictionary
+        categoriesOfficial = ["annualReturn", "profitFactor", "winRate", "maxDrawdown", "annualVolatility", "sharpeRatio"]
+
+        # Separate the tickers and strategies into two separate lists
+        tickers, strategies = self.sInfo.separateStrategies(ticker_strategy)
+
+        print("Got all tickers! They are: " + str(tickers))
+        print("Got all strategies! They are: " + str(strategies))
+
+        # Configure the column(s)
+        newWindow.columnconfigure(0, weight=1)
+        newWindow.columnconfigure(1, weight=1)
+        newWindow.columnconfigure(2, weight=1)
+
+        # Configure the rows
+        for stratIndex in range(len(strategies)):
+
+            # Configure the row within the window
+            newWindow.rowconfigure(stratIndex, weight=1)
+
+            # Create the outermost frame within the window
+            frameOne = tk.Frame(newWindow)
+            frameOne.grid(column=1, row=stratIndex, sticky=tk.N)
+
+            # Configure the above frame to have three columns in order to be centered
+            frameOne.columnconfigure(0, weight=1)
+            frameOne.columnconfigure(1, weight=1)
+            frameOne.columnconfigure(2, weight=1)
+
+            # Configure the above frame two have two rows: 1) The top row for the title, 2) The bottom row for stock info
+            frameOne.rowconfigure(0, weight=1)
+            frameOne.rowconfigure(1, weight=1)
+            frameOne.rowconfigure(2, weight=1)
+
+            # Create the top frame that contains the title inside frameOne
+            frameTitle = tk.Frame(frameOne)
+            frameTitle.grid(column=1, row=0, sticky=tk.N)
+
+            # Inside frameTitle, place a label for the title
+            # Note: column and row are both zero because frameTitle doesn't need to be row/column configured
+            frameTitleLabel = tk.Label(frameTitle, text=strategies[stratIndex])
+            frameTitleLabel.config(font="Bold 16")
+            frameTitleLabel.grid(column=0, row=0, sticky=tk.N)
+
+            # Create the bottom frame that contains stock info inside frameOne
+            frameStockInfo = tk.Frame(frameOne)
+            frameStockInfo.grid(column=1, row=1, sticky=tk.S)
+
+            # Output the different category names
+            for categoryIndex in range(len(categories)):
+
+                # Create each category inside the frameStockInfo frame
+                stockCategory = tk.Label(frameStockInfo, text=categories[categoryIndex])
+
+                stockCategory.grid(column=categoryIndex, row=0, padx=3)
+
+            # Output the displays for each stock retrieved from the API call
+            for tickerIndex in range(len(tickers[stratIndex])):
+
+                # Display the stock name
+                stockName = tk.Label(frameStockInfo, text=tickers[stratIndex][tickerIndex], highlightcolor="blue", highlightthickness=4)
+                stockName.grid(column=0, row=tickerIndex+1, padx=3)
+
+                for finalCategoryIndex in range(len(categoriesOfficial)):
+
+                    stockCategory = tk.Label(frameStockInfo, text=self.stratDict[tickers[stratIndex][tickerIndex]][strategies[stratIndex]][categoriesOfficial[finalCategoryIndex]])
+                    stockCategory.grid(column=finalCategoryIndex+1, row=tickerIndex+1, padx=3)
+
+            # Optionally add a "Add to Portfolio"
+            if portfolioAddButton:
+
+                # This function adds the given ticker(s) to the portfolio
+                def AddToPortfolio():
+
+                    # Add each ticker to the portfolio
+                    for ticker in tickers[stratIndex]:
+                    
+                        self.sInfo.portfolioInfo("Add", ticker, strategies[stratIndex])
+
+                def RemoveFromPortfolio():
+
+                    # Add each ticker to the portfolio
+                    for ticker in tickers[stratIndex]:
+                    
+                        self.sInfo.portfolioInfo("Remove", ticker, strategies[stratIndex])
+
+                # Create a "Add to Portfolio" button and place it in the third row (row=2 is zero-based)
+                portfolioAddButton = tk.Button(frameOne, text="Add to Portfolio", command=AddToPortfolio)
+                portfolioAddButton.grid(column=1, row=2, sticky=tk.S)
+
+                # Create a "Remove from Portfolio" button and place it in the third row, third column
+                portfolioRemoveButton = tk.Button(frameOne, text="Remove from Portfolio", command=RemoveFromPortfolio)
+                portfolioRemoveButton.grid(column=1, row=3)
+
+
+
+
+
+
+        # TODO: Remove these two small chunks of code and use them above in the for loop somehow
+        # Create a frame for our new window
+        """newWindowFrame = tk.Frame(newWindow)
+        newWindowFrame.grid(column=1, row=1, sticky=tk.N)
+
+        # Create a bannner for our window
+        bannerLabel = tk.Label(newWindow, text=banner)
+        bannerLabel.config(font="Bold 16")
+        bannerLabel.grid(column=1, row=0)
+
+        # TODO: Find a way to iterate through the ticker_strategy variable and display the ticker and its info
+        #       within its corresponding frame
+        # Iterate through all stocks that need to be displayed
+        for stockData in ticker_strategy:
+
+            # Display data on the window in strategy format
+            if stockData[1] != "None":
+
+                # We need to display Annualized Return, Win/Loss Ratio, Max Drawdown, Annualized Volatility and the Sharpe Ratio
+                categories = ["Stock", "Annualized Return", "% Profitability", "Win/Loss Ratio", "Max Drawdown", "Annualized Volatility", "Sharpe Ratio"]
+
+                # These are the technical names of the categories, which are used to index the dictionary
+                categoriesOfficial = ["annualReturn", "profitFactor", "winRate", "maxDrawdown", "annualVolatility", "sharpeRatio"]
+
+                # Output the different category names
+                for index in range(len(categories)):
+
+                    # Create each category inside the stockInfo frame
+                    stockCategory = tk.Label(newWindowFrame, text=categories[index])
+                    #stockCategory.config(font="Segoe 10")
+                    stockCategory.grid(column=index, row=0, padx=3)
+
+                # Output the displays for each stock retrieved from the API call
+                for i in range(len(stockNameList)):
+
+                    stockName = tk.Label(newWindowFrame, text=stockNameList[i], highlightcolor="blue", highlightthickness=4)
+                    #stockName.config(font="Segoe 10")
+                    stockName.grid(column=0, row=i+1, padx=3)
+
+                    for j in range(len(categoriesOfficial)):
+
+                        stockCategory = tk.Label(newWindowFrame, text=self.stratDict[stockNameList[i]][strategyType][categoriesOfficial[j]])
+                        #stockCategory.config(font="Segoe 10")
+                        stockCategory.grid(column=j+1, row=i+1, padx=3)"""
+
+
+
+
+""" def display_info(self, stockNameList, strategyType, banner="Info"):
 
         # Create a new window
         newWindow = tk.Toplevel(self)
@@ -276,6 +451,7 @@ class DisplayClass(tk.Tk):
                     stockCategory = tk.Label(newWindowFrame, text=self.stratDict[stockNameList[i]][strategyType][categoriesOfficial[j]])
                     #stockCategory.config(font="Segoe 10")
                     stockCategory.grid(column=j+1, row=i+1, padx=3)
+"""
 
 
 
