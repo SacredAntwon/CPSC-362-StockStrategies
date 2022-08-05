@@ -8,6 +8,7 @@ from requests.exceptions import Timeout
 import yfinance as yf
 
 # FINISHED API DEMO AND PASSED AT July 19th 8:01 PM
+# ADAPTER PATTERN
 class HistoricalDataAdapter():
     def __init__(self, **adapted_method):
         self.__dict__.update(adapted_method)
@@ -29,6 +30,7 @@ def getHistoricalData(ticker, data_source="API"):
 
     return hdata
 
+# THIS IS THE ADAPTEE FOR THE ABOVE ADAPTER
 class StockInfoAPI():
     def __init__(self, ticker):
         self.ticker = ticker
@@ -50,6 +52,7 @@ class StockInfoAPI():
         # df.to_csv('out.csv')
         return df
 
+# THIS IS THE ADAPTEE FOR THE ABOVE ADAPTER
 class StockInfoYF():
     def __init__(self, ticker):
         self.ticker = ticker
@@ -122,7 +125,7 @@ currentStockInfo['ask'], currentStockInfo['regularMarketVolume'], currentStockIn
 currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRating']))
 
     # This function will check if there is a valid key.
-    # DECORATOR
+    # DECORATOR FOR BASIC STOCK INFO
     def findInfo(self, currentStock, key):
         if key in currentStock:
             return currentStock[key]

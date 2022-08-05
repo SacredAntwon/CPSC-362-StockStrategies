@@ -12,6 +12,7 @@ from backtesting.test import SMA
 #     def next(self):
 #         pass
 
+# THIS IS A STRATEGY PATTERN
 class SmaCross(Strategy):
     def init(self):
         price = self.data.Close
@@ -24,6 +25,7 @@ class SmaCross(Strategy):
         elif crossover(self.ma2, self.ma1):
             self.sell()
 
+# THIS IS A STRATEGY PATTERN
 class SmaCross2(Strategy):
     def init(self):
         self.price = self.data.Close
