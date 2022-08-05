@@ -5,6 +5,7 @@ from backtesting import Backtest, Strategy
 from backtesting.lib import crossover
 from backtesting.test import SMA
 
+# STRATEGY PATERN IMPLEMENTED HERE 
 class SmaCross(Strategy):
     def init(self):
         price = self.data.Close
