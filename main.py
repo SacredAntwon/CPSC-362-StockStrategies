@@ -6,7 +6,6 @@ from backtesting import Backtest, Strategy
 
 # Call the functions
 
-
 if __name__ == '__main__':
 
     print("Getting stock information...")
