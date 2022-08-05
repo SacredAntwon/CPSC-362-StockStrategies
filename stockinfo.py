@@ -15,17 +15,12 @@ class HistoricalDataAdapter():
 
 def getHistoricalData(ticker, data_source="API"):
     if data_source == "API":
-        #print(ticker)
         hd = StockInfoAPI(ticker)
-        #print(hd)
+
     elif data_source == "Yahoo":
         hd = StockInfoYF(ticker)
-        #print(hd)
 
-    #historical_data = StockInfo().keepImportantInfo(hd)
-    #print(historical_data)
     data_adapter = HistoricalDataAdapter(historical_data = hd.getStockHistory)
-    #print(data_adapter)
     hdata = data_adapter.historical_data()
 
     return hdata
@@ -44,12 +39,6 @@ class StockInfoAPI():
         query_string = f'https://query1.finance.yahoo.com/v7/finance/download/{self.ticker}?period1={period1}&period2={period2}&interval={interval}&events=history&includeAdjustedClose=true'
 
         df = pd.read_csv(query_string, index_col='Date', parse_dates=True)
-        #df = pd.read_csv(query_string)
-        # Different Index:  Date        Open        High         Low       Close   Adj Close    Volume
-        #print(df['Adj Clos'])
-        #df.set_index('Date', inplace=True)
-        # df = df.rename_axis(None)
-        # df.to_csv('out.csv')
         return df
 
 # THIS IS THE ADAPTEE FOR THE ABOVE ADAPTER
@@ -91,14 +80,8 @@ class StockInfo:
 
         return statDict
 
-
-    # Checks if a file exists
-
-
-
+    # Check if the file exists
     def fileExists(self, file: str) -> bool:
-
-        # Check if the file exists
         if os.path.isfile(file):
 
             return True
@@ -165,10 +148,10 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
         else:
             self.dowJones = self.getJSONData("userStocks.json")
 
+    # Store info into portfolio json
     def portfolioInfo(self, todo, ticker):
-        #self.jsonFileDump("portfolio.json", {})
         data = self.getJSONData('portfolio.json')
-        
+
         print(data)
         if (todo == "Add"):
             if ticker not in data['portfolio']:
@@ -179,26 +162,13 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
                 data['portfolio'].remove(ticker)
 
         self.jsonFileDump("portfolio.json", data)
-        #Check if the file exists
-        # if not self.fileExists("userStocks.json"):
-        #     # print("Getting stock information from yahoo!")
-        #
-        #     data = self.getJSONData('DOW.json')
-        #
-        #     self.storeStockInfo(data)
-        #
-        # else:
-        #
-        #     with open('userStocks.json', 'r') as openfile:
-        #
-        #         # Reading from json file
-        #         self.dowJones = json.load(openfile)
 
     # Grab and store stock infromation
     def jsonFileDump(self, fileName, data):
         with open(fileName, "w") as outfile:
             json.dump(data, outfile)
 
+    # Store the stock info
     def storeStockInfo(self, data: dict) -> bool:
 
         listOfStocks = data['DOW']
@@ -236,8 +206,6 @@ currentStockInfo['epsTrailingTwelveMonths'], currentStockInfo['averageAnalystRat
             self.dowJones[stock] = stockInfo
 
         self.jsonFileDump("userStocks.json", self.getAllStockInfo())
-        # with open("userStocks.json", "w") as outfile:
-        #     json.dump(self.dowJones, outfile)
 
         return True
 

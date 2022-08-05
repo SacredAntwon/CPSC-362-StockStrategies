@@ -132,7 +132,7 @@ class DisplayClass(tk.Tk):
 
         # Create a list containing the list of all strategy names
         # Note: This is hard coded, but can be changed later if needed
-        strategyNames = ["Trend-Following", "Signal-And-Trailing"]
+        strategyNames = ["Trend-Following", "PriceSMA"]
 
         # Create the variable to store user input from the dropdown regarding ticker names
         # TODO: Somehow pass this variable to the smacro.py or signalAndTrailing.py files to
