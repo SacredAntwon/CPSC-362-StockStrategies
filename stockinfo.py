@@ -51,6 +51,7 @@ class StockInfoYF():
 
         return hist
 
+# CONTAINS MANY FUNCTIONS TO GRAB INFORMATION ABOUT A STOCK
 class StockInfo:
 
     # Initializer
@@ -73,7 +74,7 @@ class StockInfo:
     def keepImportantInfo(self, stats):
         statDict = {'annualReturn': stats['Return (Ann.) [%]'],
                     'profitFactor': stats['Profit Factor'],
-                    'winRate': stats['Win Rate [%]'], # ASK IF ITS JUST WIN RATE
+                    'winRate': stats['Win Rate [%]'],
                     'maxDrawdown': stats['Max. Drawdown [%]'],
                     'annualVolatility': stats['Volatility (Ann.) [%]'],
                     'sharpeRatio': stats['Sharpe Ratio']}

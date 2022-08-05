@@ -5,7 +5,7 @@ from backtesting import Backtest, Strategy
 from backtesting.lib import crossover
 from backtesting.test import SMA
 
-# STRATEGY PATERN IMPLEMENTED HERE 
+# STRATEGY PATERN IMPLEMENTED HERE
 class SmaCross(Strategy):
     def init(self):
         price = self.data.Close
@@ -31,6 +31,7 @@ class SmaCross2(Strategy):
         elif crossover(self.price, self.ma2):
             self.sell()
 
+# USED TO DO BACKTESTING AND GET STRATEGY
 def grabStrategyInfo(tickers, cash):
     obj = stockinfo.StockInfo()
     if not obj.fileExists("userStrategies.json"):
