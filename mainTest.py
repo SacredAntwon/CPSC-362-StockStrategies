@@ -4,7 +4,6 @@ import strategy
 from backtesting import Backtest, Strategy
 
 # Call the functions
-#meanr = meanrev.MeanReversion()
 obj = stockinfo.StockInfo()
 #backt = backtest.SMAcross()
 
@@ -33,21 +32,7 @@ for name in allStocks:
 #bt = backtesting.Backtesting(100000, prices, 0)
 
 
-# Uncomment this after you're done testing
 
-#print(len(prices))
-# def runBackTest(ticker):
-#     stock = obj.getStockHistory(ticker)
-#
-#     movingAvg = Backtest(stock, strategy.SmaCross, cash=100000, commission= 0, exclusive_orders=True)
-#
-#     sigAndTrail = Backtest(stock, strategy.SigTrailCross, cash=100000, commission= 0, exclusive_orders=True)
-#
-#     statsMove = movingAvg.run()
-#     statsSigTrail = sigAndTrail.run()
-#
-#     print(obj.keepImportantInfo(statsMove))
-#     print(obj.keepImportantInfo(statsSigTrail))
 
 # Uncomment this chunk of lines later if testing is needed
 print("Select a stock from the list above.")
@@ -61,15 +46,6 @@ while (userStock != 'exit'):
     else:
         print(obj.displayInfo(userStock))
         print(allStockStrategies[userStock][userStrategy])
-
-        #runBackTest(userStock)
-        #print(strategy.selectStrategy(userStrategy, userStock))
-        #print(backt.movingAverage(userStock))
-        #print(obj.getStockHistory(userStock))
-        #stock = obj.getStockHistory(userStock)
-        #print(stock)
-        #backtest.getStats(stock)
-        #print(backtest.getStats(stock))
 
     userStock = input("Type the ticker you would like to view more information \
 about(Case Sensitive) or 'exit' to end the program: ")
