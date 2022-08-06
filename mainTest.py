@@ -1,10 +1,10 @@
-import stockinfo
+import Model.data as data
 import backtest
-import strategy
+import Model.strategy as strategy
 from backtesting import Backtest, Strategy
 
 # Call the functions
-obj = stockinfo.StockInfo()
+obj = data.StockInfo()
 
 
 obj.portfolioInfo("Add", "AAPL", "Trend-Following")

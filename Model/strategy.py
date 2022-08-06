@@ -1,4 +1,4 @@
-import stockinfo
+import Model.data as data
 import json
 import pandas as pd
 from backtesting import Backtest, Strategy
@@ -32,13 +32,13 @@ class SmaCross2(Strategy):
             self.sell()
 
 # USED TO DO BACKTESTING AND GET STRATEGY
-def grabStrategyInfo(tickers, cash):
-    obj = stockinfo.StockInfo()
+def grabStrategyData(tickers, cash):
+    obj = data.Data()
     if not obj.fileExists("userStrategies.json"):
         money = cash
         stratDict = {}
         for item in tickers:
-            stock = stockinfo.getHistoricalData(item)
+            stock = data.getHistoricalData(item)
             statsSMA = Backtest(stock, SmaCross, cash=money, commission= 0, exclusive_orders=True)
             statsSMA2 = Backtest(stock, SmaCross2, cash=money, commission= 0, exclusive_orders=True)
 
@@ -48,6 +48,7 @@ def grabStrategyInfo(tickers, cash):
             stratDict[item] = {}
             stratDict[item]["Trend-Following"] = obj.keepImportantInfo(statsSMA)
             stratDict[item]["PriceSMA"] = obj.keepImportantInfo(statsSMA2)
+                
 
         obj.jsonFileDump("userStrategies.json", stratDict)
 

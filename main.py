@@ -1,7 +1,7 @@
-import stockinfo
+import Model.data as data
 import backtest
-import strategy
-import display
+import Model.strategy as strategy
+import view
 from backtesting import Backtest, Strategy
 
 # Call the functions
@@ -9,16 +9,14 @@ from backtesting import Backtest, Strategy
 if __name__ == '__main__':
 
     print("Getting stock information...")
-    sinfo = stockinfo.StockInfo()
-    sinfo.readJSONFile()
+    sinfo = data.Data()
 
     print("Running all strategies...")
 
-    strat = strategy.grabStrategyInfo(sinfo.getStockNames(), 1000000)
-    #print(strat)
+    strat = strategy.grabStrategyData(sinfo.getStockNames(), 1000000)
 
     print("Running the display!")
 
     # Run the display
-    gui = display.DisplayClass(sinfo, strat)
+    gui = view.View(sinfo, strat)
     gui.mainloop()

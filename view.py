@@ -1,14 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter.font import BOLD
-import stockinfo
+import Model.data as data
 
-class DisplayClass(tk.Tk):
+class View(tk.Tk):
 
     # This initializer places all widgets within their corresponding frame
-    # sinfo - An object containing all stock info
+    # sData - An object containing all stock info
     # strat - A dictionary of all stock testing info (Win/Loss Ratio, % Profitability, etc)
-    def __init__(self, sinfo, strat):
+    def __init__(self, sData, strat):
         super().__init__()
 
         #self.geometry("240x100")
@@ -26,7 +26,7 @@ class DisplayClass(tk.Tk):
         self.rowconfigure(2, weight=1)
 
         # Save the object containing stock info
-        self.sInfo = sinfo
+        self.sData = sData
 
         # Save the dictionary containing strategy info
         self.stratDict = strat
@@ -50,9 +50,9 @@ class DisplayClass(tk.Tk):
     def makeAPICalls(self):
 
         # Store all relevant information in local variables within our class
-        self.stockDict = self.sInfo.getAllStockInfo()
-        self.stockData = self.sInfo.getKeys()
-        self.stockNames = self.sInfo.getStockNames()
+        self.stockDict = self.sData.getAllStockInfo()
+        self.stockData = self.sData.getKeys()
+        self.stockNames = self.sData.getStockNames()
 
     # This function creates the widgets for all stock info
     def create_display_stock_info(self):
@@ -207,7 +207,7 @@ class DisplayClass(tk.Tk):
 
             try:
 
-                data = self.sInfo.getJSONData("portfolio.json")["portfolio"]
+                data = self.sData.getPortfolioData()
 
                 if data == []:
 
@@ -261,13 +261,17 @@ class DisplayClass(tk.Tk):
         newWindow.geometry("800x800")
 
         # We need to display Annualized Return, Win/Loss Ratio, Max Drawdown, Annualized Volatility and the Sharpe Ratio
-        categories = ["Stock", "Annualized Return", "% Profitability", "Win/Loss Ratio", "Max Drawdown", "Annualized Volatility", "Sharpe Ratio"]
+        #categories = ["Stock", "Annualized Return", "% Profitability", "Win/Loss Ratio", "Max Drawdown", "Annualized Volatility", "Sharpe Ratio"]
 
         # These are the technical names of the categories, which are used to index the dictionary
-        categoriesOfficial = ["annualReturn", "profitFactor", "winRate", "maxDrawdown", "annualVolatility", "sharpeRatio"]
+        #categoriesOfficial = ["annualReturn", "profitFactor", "winRate", "maxDrawdown", "annualVolatility", "sharpeRatio"]
+
+        # Store the categories of data to be displayed
+        categories = data.categories
+        categoriesOfficial = data.categoriesOfficial
 
         # Separate the tickers and strategies into two separate lists
-        tickers, strategies = self.sInfo.separateStrategies(ticker_strategy)
+        tickers, strategies = self.sData.separateStrategies(ticker_strategy)
 
         print("Got all tickers! They are: " + str(tickers))
         print("Got all strategies! They are: " + str(strategies))
@@ -340,14 +344,14 @@ class DisplayClass(tk.Tk):
                     # Add each ticker to the portfolio
                     for ticker in tickers[stratIndex]:
                     
-                        self.sInfo.portfolioInfo("Add", ticker, strategies[stratIndex])
+                        self.sData.portfolioInfo("Add", ticker, strategies[stratIndex])
 
                 def RemoveFromPortfolio():
 
                     # Add each ticker to the portfolio
                     for ticker in tickers[stratIndex]:
                     
-                        self.sInfo.portfolioInfo("Remove", ticker, strategies[stratIndex])
+                        self.sData.portfolioInfo("Remove", ticker, strategies[stratIndex])
 
                 # Create a "Add to Portfolio" button and place it in the third row (row=2 is zero-based)
                 portfolioAddButton = tk.Button(frameOne, text="Add to Portfolio", command=AddToPortfolio)

@@ -1,5 +1,5 @@
 # For testing at the bottom of this code
-import stockinfo
+import Model.data as data
 
 """
 
@@ -405,7 +405,7 @@ class Backtest:
 
 if __name__ == "__main__":
 
-    stockInfo = stockinfo.StockInfo()
+    stockInfo = data.StockInfo()
 
     stockInfo.readJSONFile()
 

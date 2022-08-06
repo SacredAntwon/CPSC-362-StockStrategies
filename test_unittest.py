@@ -1,7 +1,7 @@
 import unittest
-import stockinfo
+import Model.data as data
 
-obj = stockinfo.StockInfo()
+obj = data.StockInfo()
 
 # Created a fake stock
 obj.dowJones = {"FKE":

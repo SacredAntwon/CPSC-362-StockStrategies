@@ -7,6 +7,13 @@ import pandas as pd
 from requests.exceptions import Timeout
 import yfinance as yf
 
+
+# We need to display Annualized Return, Win/Loss Ratio, Max Drawdown, Annualized Volatility and the Sharpe Ratio
+categories = ["Stock", "Annualized Return", "% Profitability", "Win/Loss Ratio", "Max Drawdown", "Annualized Volatility", "Sharpe Ratio"]
+
+# These are the technical names of the categories, which are used to index the dictionary
+categoriesOfficial = ["annualReturn", "profitFactor", "winRate", "maxDrawdown", "annualVolatility", "sharpeRatio"]
+
 # FINISHED API DEMO AND PASSED AT July 19th 8:01 PM
 # ADAPTER PATTERN IMPLEMENTED HERE
 class HistoricalDataAdapter():
@@ -52,7 +59,7 @@ class StockInfoYF():
         return hist
 
 # CONTAINS MANY FUNCTIONS TO GRAB INFORMATION ABOUT A STOCK
-class StockInfo:
+class Data:
 
     # Initializer
 
@@ -62,6 +69,8 @@ class StockInfo:
 
         self.dowJones = {}
         self.keys = ['regularMarketOpen', 'regularMarketPreviousClose', 'bid', 'ask', 'regularMarketVolume', 'trailingPE', 'epsTrailingTwelveMonths', 'averageAnalystRating']
+
+        self.readJSONFile()
     # -------------------------------------------------------------------
 
 
@@ -98,6 +107,14 @@ class StockInfo:
         data = json.load(f)
 
         return data
+
+    def getPortfolioData(self):
+
+        # Getting stock tickers from json included in folder
+        f = open("portfolio.json")
+        data = json.load(f)
+
+        return data['portfolio']
 
     # This function will convert the information to a string.
     def displayInfo(self, currentStock):
